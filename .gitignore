@@ -47,3 +47,8 @@ node_modules
 
 # Environment variables (ADD THIS LINE)
 .env
+
+# Firebase service account keys
+serviceAccountKey.json
+serviceAccountKey*.json
+firebase-adminsdk*.json
