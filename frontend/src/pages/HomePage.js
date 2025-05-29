@@ -1,7 +1,6 @@
 // src/pages/HomePage.js
-// Clean Professional SportsChat+ Landing Page
-// Simplified design with Logo.png background
-// ==========================================
+// Fixed with proper theme support and opacity matching older design
+// ================================================================
 
 import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -15,6 +14,11 @@ const HomePage = () => {
   const { user, loading } = useAuth();
   const { theme, toggleTheme } = useTheme();
   
+  // Apply theme to document root
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
+  
   // Redirect logged-in users to dashboard - but only after loading is complete
   useEffect(() => {
     if (!loading && user) {
@@ -25,7 +29,7 @@ const HomePage = () => {
   // Show loading state while auth is being determined
   if (loading) {
     return (
-      <div className="home-page loading-state">
+      <div className="home-page loading-state" data-theme={theme}>
         <div className="loading-box">
           <div className="loading-spinner"></div>
           <h2>Loading SportsChatPlus...</h2>
@@ -35,7 +39,7 @@ const HomePage = () => {
   }
 
   return (
-    <div className="home-page">
+    <div className="home-page" data-theme={theme}>
       {/* Theme Toggle Button */}
       <button
         onClick={toggleTheme}

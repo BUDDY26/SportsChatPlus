@@ -29,11 +29,11 @@
   --shadow-medium: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Dark Theme */
+/* Dark Theme - FIXED */
 [data-theme="dark"] {
   --bg-primary: #1a1a1a;
-  --bg-secondary: rgba(30, 30, 30, 0.9);
-  --bg-tertiary: rgba(40, 40, 40, 0.9);
+  --bg-secondary: rgba(30, 30, 30, 0.7);
+  --bg-tertiary: rgba(40, 40, 40, 0.7);
   --bg-sidebar: rgba(15, 15, 25, 0.95);
   --bg-header: rgba(15, 15, 25, 0.95);
   
@@ -78,16 +78,18 @@ body {
   transition: background-color 0.3s ease;
 }
 
-/* Content box styling (smaller, more transparent white box) */
+/* FIXED: Content box styling - proper transparency and size */
 .content-box {
   background-color: var(--bg-secondary);
   border-radius: 8px;
   padding: 20px;
-  max-width: 600px; /* Increased for homepage */
+  max-width: 480px; /* REDUCED: Smaller to fit without scrolling */
   width: 100%;
   text-align: center;
   box-shadow: var(--shadow-light);
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  backdrop-filter: blur(10px); /* ADDED: For better glass effect */
+  border: 1px solid rgba(255, 255, 255, 0.2); /* ADDED: Subtle border */
 }
 
 /* Special content box for login/signup pages */
@@ -193,6 +195,25 @@ body {
 .primary-button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+/* FIXED: Secondary button - consistent with theme */
+.secondary-button {
+  background-color: var(--accent-secondary);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 0;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  width: 100%;
+  margin: 12px 0;
+  transition: background-color 0.3s ease;
+}
+
+.secondary-button:hover {
+  background-color: var(--accent-hover);
 }
 
 /* Links */
@@ -1049,7 +1070,7 @@ body {
   font-size: 12px;
 }
 
-/* Theme toggle button (if you want to customize it) */
+/* FIXED: Theme toggle button */
 .theme-toggle {
   position: fixed;
   top: 20px;
@@ -1064,11 +1085,24 @@ body {
   z-index: 1000;
   backdrop-filter: blur(10px);
   transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .theme-toggle:hover {
   background: rgba(255, 255, 255, 0.3);
   transform: scale(1.1);
+}
+
+/* Dark theme override for theme toggle */
+[data-theme="dark"] .theme-toggle {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+[data-theme="dark"] .theme-toggle:hover {
+  background: rgba(0, 0, 0, 0.3);
 }
 
 /* Enhanced error and success messages */
@@ -1108,9 +1142,9 @@ body {
   }
 }
 
-/* Dark theme support (if you want to add it later) */
+/* Dark theme support for form elements */
 [data-theme="dark"] .content-box {
-  background-color: rgba(30, 30, 30, 0.9);
+  background-color: rgba(30, 30, 30, 0.7);
   color: white;
 }
 
@@ -1121,72 +1155,74 @@ body {
 }
 
 [data-theme="dark"] .primary-button {
-  background-color: #1a73e8;
+  background-color: #4a9eff;
+}
+
+[data-theme="dark"] .secondary-button {
+  background-color: #5a8def;
 }
 
 /* ======================================= */
-/* HOMEPAGE ENHANCEMENTS TO ADD TO YOUR EXISTING STYLES.CSS */
-/* Add these rules to your current 1500-line file */
+/* HOMEPAGE SPECIFIC STYLES - FIXED AND COMPACT */
 /* ======================================= */
 
-/* ENHANCED: Special content box for homepage only */
+/* FIXED: Homepage content box - compact size */
 .content-box.homepage-content {
-  max-width: 600px !important; /* Larger than default 400px */
-  padding: 40px 30px !important;
-  background-color: rgba(255, 255, 255, 0.85) !important;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  max-width: 480px !important; /* REDUCED: Smaller to fit better */
+  padding: 25px 20px !important; /* REDUCED: Less padding */
+  /* Uses the CSS variable for proper transparency */
 }
 
-/* ENHANCED: Main branding section */
+/* FIXED: Main branding section - compact */
 .main-branding {
-  margin-bottom: 30px;
+  margin-bottom: 20px; /* REDUCED: Less space */
 }
 
-/* ENHANCED: Much larger main title */
+/* FIXED: Main title - smaller and theme-aware */
 .main-title {
-  font-size: 48px !important;
+  font-size: 42px !important; /* REDUCED: Smaller title */
   font-weight: 900 !important;
-  margin-bottom: 10px;
-  color: #2c3e50 !important;
-  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+  margin-bottom: 8px !important; /* REDUCED: Less margin */
+  color: var(--text-primary) !important; /* FIXED: Use theme variable */
+  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.3);
   line-height: 1.1;
 }
 
-/* ENHANCED: Larger subtitle */
+/* FIXED: Subtitle - smaller and theme-aware */
 .main-subtitle {
-  font-size: 20px !important;
-  color: #3498db !important;
-  margin-bottom: 20px;
+  font-size: 18px !important; /* REDUCED: Smaller subtitle */
+  color: var(--accent-primary) !important; /* FIXED: Use theme variable */
+  margin-bottom: 15px !important; /* REDUCED: Less margin */
   font-weight: 600 !important;
-  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.7);
+  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.3);
 }
 
-/* ENHANCED: Clean features grid */
+/* FIXED: Features grid - more compact */
 .features-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 20px;
-  margin: 30px 0;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); /* REDUCED: Smaller cards */
+  gap: 15px; /* REDUCED: Less gap */
+  margin: 20px 0; /* REDUCED: Less margin */
 }
 
+/* FIXED: Feature cards - compact and theme-aware */
 .feature-card {
-  background: rgba(255, 255, 255, 0.8) !important;
-  border: 1px solid rgba(0, 123, 255, 0.2) !important;
+  background: var(--bg-secondary) !important; /* FIXED: Use theme variable */
+  border: 1px solid var(--border-color) !important; /* FIXED: Use theme variable */
   border-radius: 8px;
-  padding: 20px 15px;
+  padding: 15px 10px; /* REDUCED: Less padding */
   transition: all 0.3s ease;
 }
 
 .feature-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15) !important;
-  border-color: #3498db !important;
+  box-shadow: var(--shadow-light) !important; /* FIXED: Use theme variable */
+  border-color: var(--accent-primary) !important; /* FIXED: Use theme variable */
 }
 
 .feature-icon {
-  font-size: 32px;
-  margin-bottom: 12px;
+  font-size: 28px; /* REDUCED: Smaller icons */
+  margin-bottom: 8px; /* REDUCED: Less margin */
   display: block;
 }
 
@@ -1194,89 +1230,89 @@ body {
   font-size: 18px !important;
   font-weight: 600 !important;
   margin: 0 0 8px 0 !important;
-  color: #2c3e50 !important;
+  color: var(--text-primary) !important; /* FIXED: Use theme variable */
 }
 
 .feature-card p {
   font-size: 14px !important;
   margin: 0 !important;
-  color: #666 !important;
+  color: var(--text-secondary) !important; /* FIXED: Use theme variable */
   line-height: 1.4;
 }
 
-/* ENHANCED: Call to action section */
+/* FIXED: Call to action section - compact */
 .cta-section {
-  margin: 30px 0;
-  padding: 25px 20px;
+  margin: 20px 0; /* REDUCED: Less margin */
+  padding: 20px 15px; /* REDUCED: Less padding */
   background: rgba(26, 115, 232, 0.1) !important;
   border-radius: 8px;
   border: 1px solid rgba(26, 115, 232, 0.2);
 }
 
+/* Dark theme override for CTA section */
+[data-theme="dark"] .cta-section {
+  background: rgba(74, 158, 255, 0.1) !important;
+  border-color: rgba(74, 158, 255, 0.2);
+}
+
 .cta-text {
-  font-size: 20px !important;
+  font-size: 18px !important; /* REDUCED: Smaller text */
   font-weight: 600 !important;
-  margin: 0 0 12px 0 !important;
-  color: #3498db !important;
+  margin: 0 0 8px 0 !important; /* REDUCED: Less margin */
+  color: var(--accent-primary) !important;
   line-height: 1.3;
 }
 
 .cta-description {
-  font-size: 16px !important;
+  font-size: 14px !important; /* REDUCED: Smaller description */
   margin: 0 !important;
-  color: #333 !important;
-  line-height: 1.5;
+  color: var(--text-secondary) !important;
+  line-height: 1.4; /* REDUCED: Tighter line height */
 }
 
-/* ENHANCED: Action buttons */
+/* FIXED: Action buttons - compact */
 .action-buttons {
-  margin: 25px 0;
+  margin: 20px 0; /* REDUCED: Less margin */
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px; /* REDUCED: Less gap */
 }
 
 .button-link {
   text-decoration: none;
 }
 
-/* ENHANCED: Special buttons for homepage */
+/* FIXED: Enhanced buttons for homepage - theme colors */
 .primary-button.cta-button {
   font-size: 18px !important;
   padding: 15px 0 !important;
-  background: linear-gradient(135deg, #3498db, #2980b9) !important;
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-hover)) !important;
   box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3) !important;
 }
 
+/* FIXED: Secondary button - no more orange, uses theme colors */
 .secondary-button.signup-button {
-  background: linear-gradient(135deg, #f39c12, #e67e22) !important;
+  background: linear-gradient(135deg, var(--accent-secondary), var(--accent-primary)) !important; /* FIXED: Blue theme colors */
   color: white !important;
-  border: none !important;
-  border-radius: 4px !important;
-  padding: 12px 0 !important;
   font-size: 16px !important;
-  font-weight: bold !important;
-  cursor: pointer !important;
-  width: 100% !important;
-  margin: 12px 0 !important;
-  transition: all 0.3s ease !important;
-  box-shadow: 0 4px 12px rgba(243, 156, 18, 0.3) !important;
+  padding: 12px 0 !important;
+  box-shadow: 0 4px 12px rgba(26, 115, 232, 0.3) !important; /* FIXED: Blue shadow */
 }
 
 .secondary-button.signup-button:hover {
   transform: translateY(-1px) !important;
-  background: linear-gradient(135deg, #e67e22, #d35400) !important;
+  background: linear-gradient(135deg, var(--accent-hover), var(--accent-secondary)) !important; /* FIXED: Theme colors */
 }
 
-/* ENHANCED: Stats section */
+/* FIXED: Stats section - compact and theme-aware */
 .stats-section {
   display: flex;
   justify-content: space-around;
-  margin: 25px 0 20px 0;
-  padding: 20px 0;
-  border-top: 2px solid rgba(0, 123, 255, 0.2) !important;
-  border-bottom: 2px solid rgba(0, 123, 255, 0.2) !important;
-  background: rgba(255, 255, 255, 0.6) !important;
+  margin: 15px 0 15px 0; /* REDUCED: Less margin */
+  padding: 15px 0; /* REDUCED: Less padding */
+  border-top: 2px solid var(--border-color) !important; /* FIXED: Use theme variable */
+  border-bottom: 2px solid var(--border-color) !important; /* FIXED: Use theme variable */
+  background: var(--bg-tertiary) !important; /* FIXED: Use theme variable */
   border-radius: 8px;
 }
 
@@ -1290,42 +1326,17 @@ body {
 .stat-number {
   font-size: 24px !important;
   font-weight: bold !important;
-  color: #3498db !important;
+  color: var(--accent-primary) !important; /* FIXED: Use theme variable */
 }
 
 .stat-label {
   font-size: 13px !important;
-  color: #666 !important;
+  color: var(--text-tertiary) !important; /* FIXED: Use theme variable */
   font-weight: 500 !important;
   text-transform: uppercase;
 }
 
-/* ENHANCED: Theme toggle */
-.theme-toggle {
-  position: fixed !important;
-  top: 20px !important;
-  right: 20px !important;
-  background: rgba(255, 255, 255, 0.2) !important;
-  border: 1px solid rgba(255, 255, 255, 0.3) !important;
-  border-radius: 50% !important;
-  width: 50px !important;
-  height: 50px !important;
-  cursor: pointer !important;
-  font-size: 20px !important;
-  z-index: 1000 !important;
-  backdrop-filter: blur(10px) !important;
-  transition: all 0.3s ease !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-}
-
-.theme-toggle:hover {
-  background: rgba(255, 255, 255, 0.3) !important;
-  transform: scale(1.1) !important;
-}
-
-/* ENHANCED: Loading states */
+/* FIXED: Loading states - theme-aware */
 .loading-state {
   background-image: url('./Logo.png') !important;
   background-size: cover !important;
@@ -1334,53 +1345,53 @@ body {
 }
 
 .loading-box {
-  background: rgba(255, 255, 255, 0.9) !important;
+  background: var(--bg-secondary) !important; /* FIXED: Use theme variable */
   padding: 40px !important;
   border-radius: 8px !important;
   text-align: center !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+  box-shadow: var(--shadow-light) !important; /* FIXED: Use theme variable */
 }
 
 .loading-spinner {
   width: 40px !important;
   height: 40px !important;
   border: 4px solid rgba(0, 123, 255, 0.2) !important;
-  border-top: 4px solid #3498db !important;
+  border-top: 4px solid var(--accent-primary) !important; /* FIXED: Use theme variable */
   border-radius: 50% !important;
   animation: spin 1s linear infinite !important;
   margin: 0 auto 20px auto !important;
 }
 
 .loading-box h2 {
-  color: #2c3e50 !important;
+  color: var(--text-primary) !important; /* FIXED: Use theme variable */
   margin: 0 !important;
   font-size: 20px !important;
   font-weight: 600 !important;
 }
 
-/* Responsive enhancements */
+/* FIXED: Responsive enhancements - more compact */
 @media (max-width: 768px) {
   .content-box.homepage-content {
-    padding: 30px 20px !important;
+    padding: 20px 15px !important; /* REDUCED: Less padding on mobile */
     margin: 10px !important;
   }
   
   .main-title {
-    font-size: 36px !important;
+    font-size: 32px !important; /* REDUCED: Smaller on mobile */
   }
   
   .main-subtitle {
-    font-size: 18px !important;
+    font-size: 16px !important; /* REDUCED: Smaller on mobile */
   }
   
   .features-grid {
     grid-template-columns: 1fr !important;
-    gap: 15px !important;
+    gap: 12px !important; /* REDUCED: Less gap on mobile */
   }
   
   .stats-section {
     flex-direction: column !important;
-    gap: 15px !important;
+    gap: 10px !important; /* REDUCED: Less gap */
     text-align: center !important;
   }
   
