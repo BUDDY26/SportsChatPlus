@@ -1426,7 +1426,109 @@ body {
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
+/* UNIFORM SIZING FOR AUTH & HOME PAGES ONLY */
+/* Dashboard page excluded - has its own layout */
 
+.home-page .content-box,
+.login-page .content-box,
+.sign-up .content-box {
+  max-width: 450px !important;
+  width: 100% !important;
+  padding: 30px 25px !important;
+  margin: 0 auto !important;
+}
+
+/* Standardize titles for non-dashboard pages */
+.home-page .page-title,
+.home-page .main-title,
+.login-page .page-title,
+.sign-up .page-title {
+  font-size: 28px !important;
+  margin-bottom: 15px !important;
+  font-weight: bold !important;
+}
+
+/* Standardize buttons for non-dashboard pages */
+.home-page .primary-button,
+.home-page .secondary-button,
+.login-page .primary-button,
+.login-page .secondary-button,
+.sign-up .primary-button,
+.sign-up .secondary-button {
+  padding: 15px 0 !important;
+  font-size: 16px !important;
+  margin: 12px 0 !important;
+  font-weight: bold !important;
+}
+
+/* Standardize feature cards for homepage */
+.home-page .features-grid {
+  gap: 15px !important;
+  margin: 20px 0 !important;
+}
+
+.home-page .feature-card {
+  padding: 20px 15px !important;
+}
+
+/* Override blue text on homepage - MUST be at the end */
+.home-page .main-subtitle {
+  color: black !important;
+}
+
+.home-page .cta-text {
+  color: black !important;
+}
+
+/* Also override any accent-primary colors on homepage */
+.home-page .main-subtitle,
+.home-page .cta-text {
+  color: black !important;
+}
+
+/* Make blue text black on login page */
+.login-page .page-title {
+  color: black !important;
+}
+
+.login-page .forgot-password a {
+  color: black !important;
+}
+
+.login-page .link-row a {
+  color: black !important;
+}
+
+.login-page .disclaimer a {
+  color: black !important;
+}
+
+/* Catch any other blue links on login page */
+.login-page a {
+  color: black !important;
+}
+
+/* Make login page title and subtitle black */
+.login-page .content-box .page-title,
+.login-page .content-box h2 {
+  color: black !important;
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  -webkit-text-fill-color: black !important;
+}
+
+/* Make the subtitle black too */
+.login-page .content-box p,
+.login-page .content-box .page-subtitle {
+  color: black !important;
+}
+
+/* Remove any gradient styling */
+.login-page h2[style*="gradient"] {
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  -webkit-text-fill-color: black !important;
+}
 /* Smooth transitions for theme switching */
 * {
   transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;

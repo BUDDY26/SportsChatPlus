@@ -91,7 +91,7 @@ const HomePage = () => {
         {/* Clean Main Branding */}
         <div className="main-branding">
           <h1 className="main-title">SportsChat+</h1>
-          <p className="main-subtitle">Your Ultimate Sports Experience</p>
+          <p className="main-subtitle"style={{ color: 'black importantS' }}>Your Ultimate Sports Experience</p>
         </div>
 
         {/* Simple Feature Grid */}
@@ -117,7 +117,7 @@ const HomePage = () => {
 
         {/* Main Call to Action */}
         <div className="cta-section">
-          <p className="cta-text">
+          <p className="cta-text" style={{ color: 'black !important' }}>
             Join the conversation and connect with fellow sports fans!
           </p>
           <p className="cta-description">

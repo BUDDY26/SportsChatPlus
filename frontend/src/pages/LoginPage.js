@@ -172,7 +172,7 @@ export const LoginPage = () => {
             color: '#666',
             fontSize: '14px'
           }}>
-            Sign in to continue your March Madness journey
+            Sign in to continue your SportsChatPlus journey
           </p>
         </div>
         

@@ -263,19 +263,17 @@ export const SignupPage = () => {
         <div style={{ textAlign: 'center', marginBottom: '25px' }}>
           <div style={{ fontSize: '40px', marginBottom: '10px' }}>🏀</div>
           <h2 className="page-title" style={{
-            background: 'linear-gradient(45deg, #007bff, #1a73e8)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
+            color: 'black',  // Changed from gradient to black
             marginBottom: '5px'
           }}>
-            Join SportsChatPlus!
+            Join SportsChat+!
           </h2>
           <p style={{ 
             margin: '0 0 15px 0', 
-            color: '#666',
+            color: 'black',
             fontSize: '14px'
           }}>
-            Create your account and dive into March Madness
+            Create your account and dive into SportsChatPlus! Connect with fellow sports enthusiasts, share your insights, and enjoy exclusive content tailored just for you.
           </p>
         </div>
         
