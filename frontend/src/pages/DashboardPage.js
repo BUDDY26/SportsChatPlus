@@ -434,7 +434,7 @@ const DashboardPage = () => {
     } finally {
       setGamesLoading(false);
     }
-  }, [activeTab, userProfile, getMockGames, generateScPlusInsights, generatePersonalizedRecommendations, fetchGames]);
+  }, [activeTab, userProfile, getMockGames, generateScPlusInsights, generatePersonalizedRecommendations,]);
 
   // Fetch games when active tab changes
   useEffect(() => {

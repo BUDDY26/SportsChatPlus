@@ -275,7 +275,7 @@ const TeamsPage = () => {
   // Handle team selection
   const handleTeamClick = useCallback((team) => {
     fetchTeamDetails(team.id);
-  }, []);
+  }, [fetchTeamDetails]);
 
   // Smart recommendation engine
   const generatePersonalizedRecommendations = useCallback(() => {
@@ -390,7 +390,7 @@ const TeamsPage = () => {
     if (teams.length > 0) {
       generatePersonalizedRecommendations();
     }
-  }, [generatePersonalizedRecommendations]);
+  }, [generatePersonalizedRecommendations, teams.length]);
 
   // Handle manual refresh
   const handleRefresh = () => {
