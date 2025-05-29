@@ -20,11 +20,11 @@ const HomePage = () => {
   }, [theme]);
   
   // COMMENTED OUT: Auto-redirect to dashboard (temporary)
-  // useEffect(() => {
-  //   if (!loading && user) {
-  //     navigate("/dashboard");
-  //   }
-  // }, [user, loading, navigate]);
+  useEffect(() => {
+     if (!loading && user) {
+       navigate("/dashboard");
+     }
+  }, [user, loading, navigate]);
 
   // Show loading state while auth is being determined
   if (loading) {

@@ -21,11 +21,11 @@ export const LoginPage = () => {
   const { theme, toggleTheme } = useTheme();
 
   // Redirect if already logged in
-  //useEffect(() => {
-  //  if (!loading && user) {
-  //    navigate("/dashboard");
-  //  }
-  //}, [user, loading, navigate]);
+  useEffect(() => {
+    if (!loading && user) {
+      navigate("/dashboard");
+    }
+  }, [user, loading, navigate]);
 
   // Smart email validation and suggestions
   useEffect(() => {
