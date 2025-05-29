@@ -52,8 +52,6 @@ const DashboardPage = () => {
     try {
       setSelectedGame(game);
       
-      generateSmartChatSuggestions(game, userActivity.chatStyle);
-      
       setUserActivity(prev => ({
         ...prev,
         gamesViewed: prev.gamesViewed + 1,
@@ -62,7 +60,7 @@ const DashboardPage = () => {
     } catch (err) {
       console.error("Error selecting game:", err);
     }
-  }, [userActivity.chatStyle]); // Removed generateSmartChatSuggestions from dependencies to avoid circular dependency
+  }, []); // Removed generateSmartChatSuggestions call to avoid dependency issues
 
   // Enhanced mock data with ALL AI features
   const getMockGames = useCallback((tab) => {
