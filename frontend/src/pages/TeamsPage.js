@@ -275,7 +275,7 @@ const TeamsPage = () => {
   // Handle team selection
   const handleTeamClick = useCallback((team) => {
     fetchTeamDetails(team.id);
-  }, [fetchTeamDetails]);
+  }, []);
 
   // Smart recommendation engine
   const generatePersonalizedRecommendations = useCallback(() => {
