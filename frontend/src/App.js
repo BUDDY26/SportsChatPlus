@@ -1,14 +1,14 @@
 // src/App.js
-// SportsChatPlus - Simplified Routing (Only Working Routes)
-// =========================================================
+// SportsChatPlus - Complete App with LoginPage
+// ============================================
 
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
 import HomePage from './pages/HomePage';
-// import LoginPage from './pages/LoginPage';           // ← Uncomment when ready
-// import SignupPage from './pages/SignupPage';         // ← Uncomment when ready  
+import LoginPage from './pages/LoginPage';
+// import SignupPage from './pages/SignupPage';         // ← Uncomment when ready   
 // import DashboardPage from './pages/DashboardPage';   // ← Uncomment when ready
 // import ForgotPasswordPage from './pages/ForgotPasswordPage'; // ← Uncomment when ready
 import './App.css';
@@ -23,18 +23,9 @@ function App() {
               {/* Working Routes */}
               <Route path="/" element={<HomePage />} />
               <Route path="/home" element={<HomePage />} />
+              <Route path="/login" element={<LoginPage />} />
               
-              {/* Temporary placeholders for missing pages */}
-              <Route path="/login" element={
-                <div style={{padding: '40px', textAlign: 'center', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-                  <div style={{background: 'rgba(255,255,255,0.9)', padding: '40px', borderRadius: '8px'}}>
-                    <h2>🏀 Login Page</h2>
-                    <p>Coming soon...</p>
-                    <a href="/" style={{color: '#007bff', textDecoration: 'none', fontSize: '16px'}}>← Back to Home</a>
-                  </div>
-                </div>
-              } />
-              
+              {/* Temporary placeholders for other missing pages */}
               <Route path="/signup" element={
                 <div style={{padding: '40px', textAlign: 'center', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
                   <div style={{background: 'rgba(255,255,255,0.9)', padding: '40px', borderRadius: '8px'}}>
@@ -51,6 +42,16 @@ function App() {
                     <h2>🏀 Dashboard</h2>
                     <p>Coming soon...</p>
                     <a href="/" style={{color: '#007bff', textDecoration: 'none', fontSize: '16px'}}>← Back to Home</a>
+                  </div>
+                </div>
+              } />
+              
+              <Route path="/forgot-password" element={
+                <div style={{padding: '40px', textAlign: 'center', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                  <div style={{background: 'rgba(255,255,255,0.9)', padding: '40px', borderRadius: '8px'}}>
+                    <h2>🏀 Forgot Password</h2>
+                    <p>Coming soon...</p>
+                    <a href="/login" style={{color: '#007bff', textDecoration: 'none', fontSize: '16px'}}>← Back to Login</a>
                   </div>
                 </div>
               } />
