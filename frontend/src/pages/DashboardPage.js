@@ -243,68 +243,68 @@ const DashboardPage = () => {
 
   // ALL PERSONALIZED RECOMMENDATIONS
   const generatePersonalizedRecommendations = useCallback((gamesList) => {
-    const recommendations = [];
+  const recommendations = [];
+  
+  if (gamesList.length > 0) {
+    const closeGames = gamesList.filter(game => 
+      game.spread && Math.abs(parseFloat(game.spread)) < 3
+    );
     
-    if (gamesList.length > 0) {
-      const closeGames = gamesList.filter(game => 
-        game.spread && Math.abs(parseFloat(game.spread)) < 3
-      );
-      
-      if (closeGames.length > 0) {
-        recommendations.push({
-          type: 'close_game',
-          title: '🔥 Nail-Biter Alert!',
-          description: `${closeGames[0].team1} vs ${closeGames[0].team2} - Spread: ${closeGames[0].spread}`,
-          action: () => handleGameClick(closeGames[0])
-        });
-      }
-
-      if (userActivity.gamesViewed > 5) {
-        recommendations.push({
-          type: 'power_user',
-          title: '📈 Advanced Stats Ready',
-          description: 'Check out detailed team analytics',
-          action: () => setActiveMenu('stats')
-        });
-      }
-
-      if (userActivity.gamesViewed > 3) {
-        recommendations.push({
-          type: 'personalized_pick',
-          title: '🎯 Picked Just for You',
-          description: `Based on your viewing history: ${gamesList[0].team1} vs ${gamesList[0].team2}`,
-          reasoning: 'Matches your preference for competitive games',
-          action: () => handleGameClick(gamesList[0])
-        });
-      }
-
-      const goodBets = gamesList.filter(game => 
-        game.scPlusAnalysis && game.scPlusAnalysis.confidence > 65 && game.scPlusAnalysis.confidence < 80
-      );
-      
-      if (goodBets.length > 0) {
-        recommendations.push({
-          type: 'smart_betting',
-          title: '💡 Smart Bet Opportunity',
-          description: `${goodBets[0].scPlusAnalysis.favorite} has optimal risk/reward`,
-          reasoning: `${goodBets[0].scPlusAnalysis.confidence}% confidence with good payout potential`,
-          action: () => handleGameClick(goodBets[0])
-        });
-      }
-
-      if (userActivity.messagesPosted < 3) {
-        recommendations.push({
-          type: 'social_boost',
-          title: '💬 Join the Conversation',
-          description: 'Fans with similar interests are chatting now!',
-          reasoning: 'Active chatters enjoy games 40% more',
-          action: () => setActiveMenu('chat')
-        });
-      }
+    if (closeGames.length > 0) {
+      recommendations.push({
+        type: 'close_game',
+        title: '🔥 Nail-Biter Alert!',
+        description: `${closeGames[0].team1} vs ${closeGames[0].team2} - Spread: ${closeGames[0].spread}`,
+        action: () => handleGameClick(closeGames[0])
+      });
     }
+
+    if (userActivity.gamesViewed > 5) {
+      recommendations.push({
+        type: 'power_user',
+        title: '📈 Advanced Stats Ready',
+        description: 'Check out detailed team analytics',
+        action: () => setActiveMenu('stats')
+      });
+    }
+
+    if (userActivity.gamesViewed > 3) {
+      recommendations.push({
+        type: 'personalized_pick',
+        title: '🎯 Picked Just for You',
+        description: `Based on your viewing history: ${gamesList[0].team1} vs ${gamesList[0].team2}`,
+        reasoning: 'Matches your preference for competitive games',
+        action: () => handleGameClick(gamesList[0])
+      });
+    }
+
+    const goodBets = gamesList.filter(game => 
+      game.scPlusAnalysis && game.scPlusAnalysis.confidence > 65 && game.scPlusAnalysis.confidence < 80
+    );
     
-    setPersonalizedRecommendations(recommendations);
-  }, [userActivity]);
+    if (goodBets.length > 0) {
+      recommendations.push({
+        type: 'smart_betting',
+        title: '💡 Smart Bet Opportunity',
+        description: `${goodBets[0].scPlusAnalysis.favorite} has optimal risk/reward`,
+        reasoning: `${goodBets[0].scPlusAnalysis.confidence}% confidence with good payout potential`,
+        action: () => handleGameClick(goodBets[0])
+      });
+    }
+
+    if (userActivity.messagesPosted < 3) {
+      recommendations.push({
+        type: 'social_boost',
+        title: '💬 Join the Conversation',
+        description: 'Fans with similar interests are chatting now!',
+        reasoning: 'Active chatters enjoy games 40% more',
+        action: () => setActiveMenu('chat')
+      });
+    }
+  }
+  
+  setPersonalizedRecommendations(recommendations);
+}, [userActivity, handleGameClick, setActiveMenu]); // FIXED: Added missing dependencies
 
   // Redirect if not logged in
   useEffect(() => {
@@ -438,20 +438,20 @@ const DashboardPage = () => {
 
   // Smart game selection with activity tracking
   const handleGameClick = useCallback(async (game) => {
-    try {
-      setSelectedGame(game);
-      
-      generateSmartChatSuggestions(game, userActivity.chatStyle);
-      
-      setUserActivity(prev => ({
-        ...prev,
-        gamesViewed: prev.gamesViewed + 1,
-        favoriteTeams: [...new Set([...prev.favoriteTeams, game.team1, game.team2].slice(0, 5))]
-      }));
-    } catch (err) {
-      console.error("Error selecting game:", err);
-    }
-  }, [userActivity.chatStyle, generateSmartChatSuggestions]);
+  try {
+    setSelectedGame(game);
+    
+    generateSmartChatSuggestions(game, userActivity.chatStyle);
+    
+    setUserActivity(prev => ({
+      ...prev,
+      gamesViewed: prev.gamesViewed + 1,
+      favoriteTeams: [...new Set([...prev.favoriteTeams, game.team1, game.team2].slice(0, 5))]
+    }));
+  } catch (err) {
+    console.error("Error selecting game:", err);
+  }
+}, [generateSmartChatSuggestions, userActivity.chatStyle]); // FIXED: Added missing dependencies
 
   // Smart message handling with user context
   const handleSendMessage = async (e) => {
