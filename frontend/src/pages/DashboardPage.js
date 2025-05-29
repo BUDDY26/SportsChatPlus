@@ -30,9 +30,8 @@ const DashboardPage = () => {
     { id: 3, user: "MarchMadnessFan", message: "My bracket is already busted!", timestamp: "30 minutes ago" }
   ]);
 
-  // SportsChatPlus Enhanced Analytics Features
+  // ALL AI FEATURES (kept from enhanced version)
   const [scPlusInsights, setScPlusInsights] = useState([]);
-  //const [expertPredictions, setExpertPredictions] = useState([]);
   const [smartChatSuggestions, setSmartChatSuggestions] = useState([]);
   const [personalizedRecommendations, setPersonalizedRecommendations] = useState([]);
   const [userActivity, setUserActivity] = useState({
@@ -40,7 +39,7 @@ const DashboardPage = () => {
     messagesPosted: 0,
     favoriteTeams: [],
     lastActive: new Date(),
-    chatStyle: 'casual' // SportsChatPlus learns user's chat style
+    chatStyle: 'casual'
   });
 
   // Apply theme to document root
@@ -48,7 +47,7 @@ const DashboardPage = () => {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
 
-  // Enhanced mock data with SportsChatPlus Expert Analysis
+  // Enhanced mock data with ALL AI features
   const getMockGames = useCallback((tab) => {
     switch (tab) {
       case "live":
@@ -174,12 +173,11 @@ const DashboardPage = () => {
     }
   }, []);
 
-  // SportsChatPlus Expert Insights generator
+  // ALL AI INSIGHT GENERATION
   const generateScPlusInsights = useCallback((gamesList) => {
     const insights = [];
     
     if (gamesList.length > 0) {
-      // High-confidence expert picks
       const highConfidencePicks = gamesList.filter(game => 
         game.scPlusAnalysis && game.scPlusAnalysis.confidence > 70
       );
@@ -194,7 +192,6 @@ const DashboardPage = () => {
         });
       }
 
-      // Upset Watch
       const upsetCandidates = gamesList.filter(game => 
         game.spread && Math.abs(parseFloat(game.spread)) > 5
       );
@@ -208,7 +205,6 @@ const DashboardPage = () => {
         });
       }
 
-      // Analytics Insight
       insights.push({
         type: 'analytics',
         title: '📊 Advanced Analytics',
@@ -220,10 +216,8 @@ const DashboardPage = () => {
     setScPlusInsights(insights);
   }, []);
 
-  // Smart Chat Suggestions based on user's style and context
+  // ALL SMART CHAT FEATURES
   const generateSmartChatSuggestions = useCallback((gameContext, userStyle = 'casual') => {
-    //const suggestions = [];
-    
     if (gameContext) {
       const styleVariations = {
         casual: [
@@ -247,32 +241,11 @@ const DashboardPage = () => {
     }
   }, []);
 
-  // Smart game selection with activity tracking
-  const handleGameClick = useCallback(async (game) => {
-    try {
-      setSelectedGame(game);
-      
-      // Generate smart chat suggestions for this game
-      generateSmartChatSuggestions(game, userActivity.chatStyle);
-      
-      // Track user activity and learn preferences
-      setUserActivity(prev => ({
-        ...prev,
-        gamesViewed: prev.gamesViewed + 1,
-        // Learn from game selections
-        favoriteTeams: [...new Set([...prev.favoriteTeams, game.team1, game.team2].slice(0, 5))]
-      }));
-    } catch (err) {
-      console.error("Error selecting game:", err);
-    }
-  }, [userActivity.chatStyle, generateSmartChatSuggestions]);
-
-  // Smart personalization engine (your original function enhanced)
+  // ALL PERSONALIZED RECOMMENDATIONS
   const generatePersonalizedRecommendations = useCallback((gamesList) => {
     const recommendations = [];
     
     if (gamesList.length > 0) {
-      // Close games recommendation
       const closeGames = gamesList.filter(game => 
         game.spread && Math.abs(parseFloat(game.spread)) < 3
       );
@@ -286,7 +259,6 @@ const DashboardPage = () => {
         });
       }
 
-      // Power user recommendations
       if (userActivity.gamesViewed > 5) {
         recommendations.push({
           type: 'power_user',
@@ -296,7 +268,6 @@ const DashboardPage = () => {
         });
       }
 
-      // Personalized pick based on viewing history
       if (userActivity.gamesViewed > 3) {
         recommendations.push({
           type: 'personalized_pick',
@@ -307,7 +278,6 @@ const DashboardPage = () => {
         });
       }
 
-      // Smart betting opportunity
       const goodBets = gamesList.filter(game => 
         game.scPlusAnalysis && game.scPlusAnalysis.confidence > 65 && game.scPlusAnalysis.confidence < 80
       );
@@ -322,7 +292,6 @@ const DashboardPage = () => {
         });
       }
 
-      // Social engagement boost
       if (userActivity.messagesPosted < 3) {
         recommendations.push({
           type: 'social_boost',
@@ -335,7 +304,7 @@ const DashboardPage = () => {
     }
     
     setPersonalizedRecommendations(recommendations);
-  }, [userActivity, handleGameClick]);
+  }, [userActivity]);
 
   // Redirect if not logged in
   useEffect(() => {
@@ -353,7 +322,7 @@ const DashboardPage = () => {
       }));
     };
 
-    const interval = setInterval(trackActivity, 30000); // Track every 30 seconds
+    const interval = setInterval(trackActivity, 30000);
     return () => clearInterval(interval);
   }, []);
 
@@ -362,8 +331,6 @@ const DashboardPage = () => {
     if (!selectedGame?.id) return;
     
     try {
-      // In a real implementation, this would use Firebase Firestore
-      // For now, using mock data with Firebase user info
       setChatMessages([
         { 
           id: 1, 
@@ -398,11 +365,8 @@ const DashboardPage = () => {
     setError(null);
     
     try {
-      // In a real implementation, this would connect to your sports API
-      // For now, using enhanced mock data with smart recommendations
       const mockGames = getMockGames(activeTab);
       
-      // Smart filtering based on user preferences
       let filteredGames = mockGames;
       if (userProfile?.preferences?.favoriteTeams?.length > 0) {
         const favoriteGames = mockGames.filter(game => 
@@ -413,7 +377,6 @@ const DashboardPage = () => {
         );
         
         if (favoriteGames.length > 0) {
-          // Prioritize favorite team games
           filteredGames = [
             ...favoriteGames,
             ...mockGames.filter(game => !favoriteGames.includes(game))
@@ -424,7 +387,6 @@ const DashboardPage = () => {
       setGames(filteredGames);
       setLastRefreshTime(new Date());
       
-      // Generate SportsChatPlus insights and recommendations
       generateScPlusInsights(filteredGames);
       generatePersonalizedRecommendations(filteredGames);
     } catch (err) {
@@ -434,7 +396,7 @@ const DashboardPage = () => {
     } finally {
       setGamesLoading(false);
     }
-  }, [activeTab, userProfile, getMockGames, generateScPlusInsights, generatePersonalizedRecommendations,]);
+  }, [activeTab, userProfile, getMockGames, generateScPlusInsights, generatePersonalizedRecommendations]);
 
   // Fetch games when active tab changes
   useEffect(() => {
@@ -474,13 +436,29 @@ const DashboardPage = () => {
     }
   }, []);
 
+  // Smart game selection with activity tracking
+  const handleGameClick = useCallback(async (game) => {
+    try {
+      setSelectedGame(game);
+      
+      generateSmartChatSuggestions(game, userActivity.chatStyle);
+      
+      setUserActivity(prev => ({
+        ...prev,
+        gamesViewed: prev.gamesViewed + 1,
+        favoriteTeams: [...new Set([...prev.favoriteTeams, game.team1, game.team2].slice(0, 5))]
+      }));
+    } catch (err) {
+      console.error("Error selecting game:", err);
+    }
+  }, [userActivity.chatStyle, generateSmartChatSuggestions]);
+
   // Smart message handling with user context
   const handleSendMessage = async (e) => {
     e.preventDefault();
     if (!chatMessage.trim() || !selectedGame?.id) return;
 
     try {
-      // Learn from user's chat style
       const detectedStyle = analyzeMessageStyle(chatMessage);
       setUserActivity(prev => ({
         ...prev,
@@ -495,13 +473,12 @@ const DashboardPage = () => {
         timestamp: "Just now",
         isCurrentUser: true,
         userId: user.uid,
-        scPlusEnhanced: true // Mark SportsChatPlus enhanced messages
+        scPlusEnhanced: true
       };
       
       setChatMessages(prev => [...prev, newMessage]);
       setChatMessage("");
       
-      // Generate new suggestions based on message and detected style
       setTimeout(() => {
         generateSmartChatSuggestions(selectedGame, detectedStyle);
       }, 1000);
@@ -517,7 +494,6 @@ const DashboardPage = () => {
     e.preventDefault();
     if (!globalChatMessage.trim()) return;
 
-    // Analyze message style
     const detectedStyle = analyzeMessageStyle(globalChatMessage);
     
     const newMessage = {
@@ -540,7 +516,7 @@ const DashboardPage = () => {
     }));
   };
 
-  // ✅ FIXED: Renamed from useSmartSuggestion to applySuggestion
+  // Apply suggestion function
   const applySuggestion = (suggestion) => {
     if (activeMenu === 'chat') {
       setGlobalChatMessage(suggestion);
@@ -554,14 +530,9 @@ const DashboardPage = () => {
     if (!selectedGame?.id) return;
     
     try {
-      // In a real implementation, this would use Firebase to store bets
       console.log(`User ${user.uid} placed bet on team ${teamId} for ${amount} coins`);
-      
-      // Smart feedback
       const teamName = teamId === 1 ? selectedGame.team1 : selectedGame.team2;
-      setError(""); // Clear any previous errors
-      
-      // Show success message (you might want to add a success state)
+      setError("");
       alert(`Bet placed successfully on ${teamName}! Good luck! 🍀`);
     } catch (err) {
       console.error("Error placing bet:", err);
@@ -600,13 +571,7 @@ const DashboardPage = () => {
       {/* Enhanced Header with Smart User Info */}
       <header className="dashboard-header">
         <div className="logo-container">
-          <h1 style={{
-            background: 'linear-gradient(45deg, var(--accent-primary), var(--accent-secondary))',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent'
-          }}>
-            🏀 SportsChat+
-          </h1>
+          <h1>🏀 SportsChat+</h1>
         </div>
         <div className="user-controls">
           <div style={{ textAlign: 'right' }}>
@@ -629,62 +594,61 @@ const DashboardPage = () => {
         </div>
       </header>
 
-      {/* SportsChatPlus Expert Insights Bar */}
+      {/* AI INSIGHTS - Properly sized and organized */}
       {scPlusInsights.length > 0 && (
-        <div className="recommendations-panel">
-          <h4 style={{ margin: '0 0 10px 0', color: 'var(--accent-primary)' }}>
+        <div className="ai-insights-container">
+          <h4 style={{ margin: '0 0 10px 0', color: 'var(--accent-primary)', fontSize: '16px' }}>
             ⭐ SportsChatPlus Expert Insights
           </h4>
-          {scPlusInsights.slice(0, 2).map((insight, index) => (
-            <div key={index} className="recommendation-item" onClick={insight.action}>
-              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '5px' }}>
-                <strong>{insight.title}</strong>
-                {insight.confidence && (
-                  <span style={{
-                    marginLeft: '10px',
-                    background: insight.confidence > 70 ? '#28a745' : '#ffc107',
-                    color: 'white',
-                    padding: '2px 6px',
-                    borderRadius: '12px',
-                    fontSize: '11px'
-                  }}>
-                    {insight.confidence}%
-                  </span>
+          <div className="ai-insights-grid">
+            {scPlusInsights.slice(0, 3).map((insight, index) => (
+              <div key={index} className="ai-insight-card" onClick={insight.action}>
+                <div className="insight-header">
+                  <strong>{insight.title}</strong>
+                  {insight.confidence && (
+                    <span className="confidence-badge">
+                      {insight.confidence}%
+                    </span>
+                  )}
+                </div>
+                <div className="insight-description">{insight.description}</div>
+                {insight.reasoning && (
+                  <div className="insight-reasoning">
+                    💡 {insight.reasoning}
+                  </div>
                 )}
               </div>
-              <div style={{ fontSize: '14px', marginBottom: '3px' }}>{insight.description}</div>
-              {insight.reasoning && (
-                <div style={{ fontSize: '12px', fontStyle: 'italic', opacity: 0.8 }}>
-                  💡 {insight.reasoning}
-                </div>
-              )}
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       )}
 
-      {/* Smart Recommendations (your original enhanced) */}
+      {/* PERSONALIZED RECOMMENDATIONS - Properly organized */}
       {personalizedRecommendations.length > 0 && (
-        <div className="recommendations-panel">
-          <h4 style={{ margin: '0 0 10px 0', color: 'var(--accent-secondary)' }}>✨ Personalized for You</h4>
-          {personalizedRecommendations.slice(0, 2).map((rec, index) => (
-            <div key={index} className="recommendation-item" onClick={rec.action}>
-              <strong>{rec.title}</strong>
-              <div style={{ fontSize: '14px', marginTop: '5px' }}>{rec.description}</div>
-              {rec.reasoning && (
-                <div style={{ fontSize: '12px', fontStyle: 'italic', marginTop: '3px', opacity: 0.8 }}>
-                  {rec.reasoning}
-                </div>
-              )}
-            </div>
-          ))}
+        <div className="recommendations-container">
+          <h4 style={{ margin: '0 0 10px 0', color: 'var(--accent-secondary)', fontSize: '16px' }}>
+            ✨ Personalized for You
+          </h4>
+          <div className="recommendations-grid">
+            {personalizedRecommendations.slice(0, 3).map((rec, index) => (
+              <div key={index} className="recommendation-card" onClick={rec.action}>
+                <strong>{rec.title}</strong>
+                <div style={{ fontSize: '14px', marginTop: '5px' }}>{rec.description}</div>
+                {rec.reasoning && (
+                  <div style={{ fontSize: '12px', fontStyle: 'italic', marginTop: '3px', opacity: 0.8 }}>
+                    {rec.reasoning}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
       {/* Main Content */}
       <div className="dashboard-content">
         <div className="march-madness-container">
-          {/* Sidebar Navigation */}
+          {/* Enhanced Sidebar Navigation */}
           <div className="sidebar">
             <div className="menu-items">
               <div 
@@ -742,10 +706,9 @@ const DashboardPage = () => {
             </div>
           </div>
 
-          {/* Main Content Area - Games View */}
+          {/* Enhanced Games View with ALL AI features */}
           {activeMenu === "games" && (
             <div className="main-content">
-              {/* Tab Navigation */}
               <div className="tabs">
                 <div
                   className={`tab ${activeTab === "upcoming" ? "active" : ""}`}
@@ -774,14 +737,12 @@ const DashboardPage = () => {
                 </button>
               </div>
 
-              {/* Last refresh time */}
               {lastRefreshTime && (
                 <div className="last-updated">
                   Last updated: {lastRefreshTime.toLocaleTimeString()}
                 </div>
               )}
 
-              {/* Games List */}
               <div className="games-list">
                 {gamesLoading ? (
                   <div className="loading-message">Loading personalized games...</div>
@@ -845,14 +806,13 @@ const DashboardPage = () => {
             </div>
           )}
 
-          {/* Teams View */}
+          {/* All other menu views (Teams, Bracket, etc.) */}
           {activeMenu === "teams" && (
             <div className="main-content">
               <TeamsPage />
             </div>
           )}
           
-          {/* Smart Bracket View */}
           {activeMenu === "bracket" && (
             <div className="main-content placeholder-content">
               <h2>🏆 SportsChatPlus Smart Bracket</h2>
@@ -912,7 +872,6 @@ const DashboardPage = () => {
             </div>
           )}
           
-          {/* Smart Bets View */}
           {activeMenu === "bets" && (
             <div className="main-content placeholder-content">
               <h2>💰 SportsChatPlus Smart Betting</h2>
@@ -933,7 +892,6 @@ const DashboardPage = () => {
                 </div>
               </div>
 
-              {/* Expert Betting Recommendations */}
               <div style={{
                 background: 'var(--bg-tertiary)',
                 padding: '20px',
@@ -967,7 +925,6 @@ const DashboardPage = () => {
             </div>
           )}
           
-          {/* Enhanced Smart Chat View */}
           {activeMenu === "chat" && (
             <div className="main-content global-chat-container">
               <div className="global-chat-header">
@@ -980,7 +937,6 @@ const DashboardPage = () => {
                 )}
               </div>
 
-              {/* Smart Chat Suggestions */}
               {smartChatSuggestions.length > 0 && (
                 <div style={{ marginBottom: '15px' }}>
                   <h4 style={{ fontSize: '14px', margin: '0 0 10px 0', color: 'var(--text-secondary)' }}>
@@ -1049,14 +1005,13 @@ const DashboardPage = () => {
             </div>
           )}
           
-          {/* Enhanced Stats View */}
           {activeMenu === "stats" && (
             <div className="main-content">
               <StatsPage activeMenu={activeMenu} />
             </div>
           )}
 
-          {/* Enhanced Game Detail Panel */}
+          {/* Enhanced Game Detail Panel with ALL AI features */}
           {selectedGame && activeMenu === "games" && (
             <div className="game-detail">
               <div className="game-header">
@@ -1080,7 +1035,6 @@ const DashboardPage = () => {
                 )}
               </div>
 
-              {/* SportsChatPlus Expert Analysis */}
               {selectedGame.scPlusAnalysis && (
                 <div style={{
                   background: 'var(--bg-tertiary)',
@@ -1112,7 +1066,6 @@ const DashboardPage = () => {
                 </div>
               )}
 
-              {/* Enhanced Game Info */}
               <div className="game-info">
                 <div className="info-item">
                   <label>Round:</label>
@@ -1133,7 +1086,6 @@ const DashboardPage = () => {
                   </span>
                 </div>
 
-                {/* Smart insights */}
                 {selectedGame.spread && (
                   <div className="smart-insight">
                     <label>💡 Quick Insight:</label>
@@ -1146,7 +1098,6 @@ const DashboardPage = () => {
                 )}
               </div>
 
-              {/* Score Display (for LIVE or completed games) */}
               {(selectedGame.time === "LIVE" || selectedGame.time === "Final") && (
                 <div className="score-display">
                   <div className="team-score">
@@ -1164,7 +1115,6 @@ const DashboardPage = () => {
                 </div>
               )}
 
-              {/* Enhanced Smart Betting Section */}
               {selectedGame.time !== "LIVE" && selectedGame.time !== "Final" && (
                 <div className="betting-section">
                   <h3>🎲 Smart Betting</h3>
@@ -1207,11 +1157,9 @@ const DashboardPage = () => {
                 </div>
               )}
 
-              {/* Enhanced Chat Section */}
               <div className="chat-section">
                 <h3>💬 Game Chat</h3>
                 
-                {/* Smart Chat Suggestions for this specific game */}
                 {smartChatSuggestions.length > 0 && (
                   <div style={{ marginBottom: '10px' }}>
                     <div style={{ fontSize: '12px', color: 'var(--text-tertiary)', marginBottom: '5px' }}>

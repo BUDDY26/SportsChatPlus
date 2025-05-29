@@ -1,8 +1,10 @@
-/* SportsChatPlus Complete Styling */
-/* Your original design + Dark/Light theme support */
-/* ================================================ */
+/* SportsChatPlus Complete Styling - Clean and Organized */
+/* ================================================== */
 
-/* CSS Variables for Theme System */
+/* ===================================== */
+/* 1. CSS VARIABLES FOR THEME SYSTEM */
+/* ===================================== */
+
 :root {
   /* Light Theme (Default) */
   --bg-primary: #f0f0f0;
@@ -29,7 +31,7 @@
   --shadow-medium: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Dark Theme - FIXED */
+/* Dark Theme */
 [data-theme="dark"] {
   --bg-primary: #1a1a1a;
   --bg-secondary: rgba(30, 30, 30, 0.4);
@@ -55,14 +57,24 @@
   --shadow-medium: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 
-/* Base Styles with Theme Support */
+/* ===================================== */
+/* 2. BASE STYLES */
+/* ===================================== */
+
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
 body {
   background-color: var(--bg-primary);
   color: var(--text-primary);
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Common background for all pages */
+/* ===================================== */
+/* 3. COMMON PAGE BACKGROUNDS */
+/* ===================================== */
+
 .home-page, .login-page, .sign-up, .dashboard-page {
   min-height: 100vh;
   display: flex;
@@ -78,42 +90,50 @@ body {
   transition: background-color 0.3s ease;
 }
 
-/* FIXED: Content box styling - proper transparency and size */
+/* Dashboard uses different layout */
+.dashboard-page {
+  justify-content: flex-start;
+}
+
+/* ===================================== */
+/* 4. CONTENT BOXES (LOGIN, SIGNUP, HOME) */
+/* ===================================== */
+
 .content-box {
   background-color: var(--bg-secondary);
   border-radius: 8px;
-  padding: 20px;
-  max-width: 480px; /* REDUCED: Smaller to fit without scrolling */
+  padding: 30px 25px;
+  max-width: 450px;
   width: 100%;
   text-align: center;
   box-shadow: var(--shadow-light);
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
-  backdrop-filter: blur(10px); /* ADDED: For better glass effect */
-  border: 1px solid rgba(255, 255, 255, 0.2); /* ADDED: Subtle border */
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  margin: 0 auto;
 }
 
-/* Special content box for login/signup pages */
-.login-page .content-box,
-.sign-up .content-box {
-  max-width: 400px;
-}
+/* ===================================== */
+/* 5. TYPOGRAPHY */
+/* ===================================== */
 
-/* Page titles */
 .page-title {
-  font-size: 24px;
+  font-size: 28px;
   font-weight: bold;
   margin-bottom: 15px;
   color: var(--text-primary);
 }
 
-/* Paragraph text */
 .content-box p {
   margin-bottom: 12px;
   font-size: 15px;
   color: var(--text-secondary);
 }
 
-/* Form elements */
+/* ===================================== */
+/* 6. FORMS */
+/* ===================================== */
+
 .form-group {
   margin-bottom: 12px;
   text-align: left;
@@ -144,7 +164,6 @@ body {
   box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
 }
 
-/* Password field with show button */
 .password-container {
   position: relative;
 }
@@ -165,22 +184,17 @@ body {
   color: var(--accent-primary);
 }
 
-/* Password hint */
-.password-hint {
-  font-size: 13px;
-  color: var(--text-tertiary);
-  margin-top: 3px;
-  text-align: left;
-}
+/* ===================================== */
+/* 7. BUTTONS */
+/* ===================================== */
 
-/* Buttons */
 .primary-button {
   background-color: var(--accent-primary);
   color: white;
   border: none;
   border-radius: 4px;
-  padding: 8px 0;
-  font-size: 15px;
+  padding: 15px 0;
+  font-size: 16px;
   font-weight: bold;
   cursor: pointer;
   width: 100%;
@@ -197,14 +211,13 @@ body {
   cursor: not-allowed;
 }
 
-/* FIXED: Secondary button - consistent with theme */
 .secondary-button {
   background-color: var(--accent-secondary);
   color: white;
   border: none;
   border-radius: 4px;
-  padding: 8px 0;
-  font-size: 15px;
+  padding: 15px 0;
+  font-size: 16px;
   font-weight: bold;
   cursor: pointer;
   width: 100%;
@@ -216,7 +229,10 @@ body {
   background-color: var(--accent-hover);
 }
 
-/* Links */
+/* ===================================== */
+/* 8. LINKS */
+/* ===================================== */
+
 .content-box a {
   color: var(--accent-primary);
   text-decoration: none;
@@ -228,33 +244,22 @@ body {
   color: var(--accent-hover);
 }
 
-/* Link row */
 .link-row {
   margin: 10px 0;
   font-size: 14px;
   color: var(--text-secondary);
 }
 
-/* Forgot password */
 .forgot-password {
   text-align: right;
   margin: 5px 0;
   font-size: 14px;
 }
 
-/* Disclaimer */
-.disclaimer {
-  font-size: 10px;
-  color: var(--text-secondary);
-  margin-top: 15px;
-  text-align: center;
-}
+/* ===================================== */
+/* 9. MESSAGES */
+/* ===================================== */
 
-.disclaimer a {
-  margin: 0 6px;
-}
-
-/* Error and success messages */
 .error-message {
   background-color: rgba(220, 53, 69, 0.1);
   color: #dc3545;
@@ -265,10 +270,9 @@ body {
   border-left: 4px solid #dc3545;
 }
 
-[data-theme="dark"] .error-message {
-  background-color: rgba(255, 107, 107, 0.2);
-  color: #ff6b6b;
-  border-left-color: #ff6b6b;
+.error-message::before {
+  content: "⚠️ ";
+  margin-right: 5px;
 }
 
 .success-message {
@@ -281,21 +285,178 @@ body {
   border-left: 4px solid #28a745;
 }
 
-[data-theme="dark"] .success-message {
-  background-color: rgba(40, 167, 69, 0.2);
-  color: #51cf66;
-  border-left-color: #51cf66;
+.success-message::before {
+  content: "✅ ";
+  margin-right: 5px;
 }
 
-/* ==================== */
-/* DASHBOARD PAGE STYLES */
-/* ==================== */
+/* ===================================== */
+/* 10. THEME TOGGLE */
+/* ===================================== */
 
-/* Dashboard Page Layout */
-.dashboard-page {
-  justify-content: flex-start;
+.theme-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+  font-size: 20px;
+  z-index: 1000;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  display: flex;
   align-items: center;
+  justify-content: center;
 }
+
+.theme-toggle:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
+}
+
+/* ===================================== */
+/* 11. HOMEPAGE SPECIFIC STYLES */
+/* ===================================== */
+
+.main-title {
+  font-size: 42px;
+  font-weight: 900;
+  margin-bottom: 8px;
+  color: var(--text-primary);
+  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.3);
+  line-height: 1.1;
+}
+
+.main-subtitle {
+  font-size: 18px;
+  color: black !important; /* Override for homepage */
+  margin-bottom: 15px;
+  font-weight: 600;
+  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.3);
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 15px;
+  margin: 20px 0;
+}
+
+.feature-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 20px 15px;
+  transition: all 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-light);
+  border-color: var(--accent-primary);
+}
+
+.feature-icon {
+  font-size: 28px;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.feature-card h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  color: var(--text-primary);
+}
+
+.feature-card p {
+  font-size: 14px;
+  margin: 0;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.cta-section {
+  margin: 20px 0;
+  padding: 20px 15px;
+  background: rgba(26, 115, 232, 0.1);
+  border-radius: 8px;
+  border: 1px solid rgba(26, 115, 232, 0.2);
+}
+
+.cta-text {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  color: black !important; /* Override for homepage */
+  line-height: 1.3;
+}
+
+.cta-description {
+  font-size: 14px;
+  margin: 0;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.stats-section {
+  display: flex;
+  justify-content: space-around;
+  margin: 15px 0;
+  padding: 15px 0;
+  border-top: 2px solid var(--border-color);
+  border-bottom: 2px solid var(--border-color);
+  background: var(--bg-tertiary);
+  border-radius: 8px;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.stat-number {
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--accent-primary);
+}
+
+.stat-label {
+  font-size: 13px;
+  color: var(--text-tertiary);
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+/* ===================================== */
+/* 12. LOGIN PAGE OVERRIDES */
+/* ===================================== */
+
+.login-page .page-title,
+.login-page .forgot-password a,
+.login-page .link-row a,
+.login-page .disclaimer a,
+.login-page a {
+  color: black !important;
+}
+
+.login-page .content-box .page-title,
+.login-page .content-box h2 {
+  color: black !important;
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  -webkit-text-fill-color: black !important;
+}
+
+/* ===================================== */
+/* 13. DASHBOARD HEADER */
+/* ===================================== */
 
 .dashboard-header {
   background-color: var(--bg-header);
@@ -345,6 +506,10 @@ body {
   background-color: #d32f2f;
 }
 
+/* ===================================== */
+/* 14. DASHBOARD CONTENT */
+/* ===================================== */
+
 .dashboard-content {
   flex: 1;
   padding: 0;
@@ -353,35 +518,6 @@ body {
   width: 100%;
 }
 
-.dashboard-footer {
-  background-color: var(--bg-tertiary);
-  padding: 10px 20px;
-  width: 100%;
-  max-width: 1200px;
-  border-radius: 8px;
-  margin-top: 20px;
-  transition: background-color 0.3s ease;
-}
-
-.footer-links {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  margin-top: 10px;
-}
-
-.footer-links a {
-  color: var(--text-tertiary);
-  text-decoration: none;
-  font-size: 14px;
-  transition: color 0.3s ease;
-}
-
-.footer-links a:hover {
-  color: var(--accent-primary);
-}
-
-/* March Madness Component Styles */
 .march-madness-container {
   display: flex;
   width: 100%;
@@ -393,6 +529,10 @@ body {
   height: calc(100vh - 180px);
   transition: background-color 0.3s ease;
 }
+
+/* ===================================== */
+/* 15. DASHBOARD SIDEBAR */
+/* ===================================== */
 
 .sidebar {
   width: 200px;
@@ -435,13 +575,16 @@ body {
   background-repeat: no-repeat;
 }
 
-/* Icons using emoji for simplicity */
 .game-icon::before { content: "🏀"; }
 .bracket-icon::before { content: "🔄"; }
 .team-icon::before { content: "👥"; }
 .coin-icon::before { content: "💰"; }
 .chat-icon::before { content: "💬"; }
 .stats-icon::before { content: "📊"; }
+
+/* ===================================== */
+/* 16. DASHBOARD MAIN CONTENT */
+/* ===================================== */
 
 .main-content {
   flex: 1;
@@ -536,6 +679,10 @@ body {
   color: var(--text-primary);
 }
 
+/* ===================================== */
+/* 17. GAME DETAIL PANEL */
+/* ===================================== */
+
 .game-detail {
   width: 350px;
   padding: 20px;
@@ -604,12 +751,6 @@ body {
   color: var(--text-primary);
 }
 
-.score {
-  font-size: 24px;
-  font-weight: bold;
-  color: var(--text-primary);
-}
-
 .versus {
   text-align: center;
   margin: 5px 0;
@@ -663,6 +804,10 @@ body {
   text-align: center;
   margin-top: 10px;
 }
+
+/* ===================================== */
+/* 18. CHAT SYSTEM */
+/* ===================================== */
 
 .chat-section {
   border-top: 1px solid var(--border-color);
@@ -728,7 +873,6 @@ body {
   color: var(--text-primary);
 }
 
-/* Chat input styles - unified */
 .chat-input {
   display: flex;
   width: calc(100% - 10px);
@@ -779,7 +923,10 @@ body {
   cursor: not-allowed;
 }
 
-/* Global chat container */
+/* ===================================== */
+/* 19. GLOBAL CHAT */
+/* ===================================== */
+
 .global-chat-container {
   display: flex;
   flex-direction: column;
@@ -837,7 +984,10 @@ body {
   margin: 0;
 }
 
-/* Placeholder content */
+/* ===================================== */
+/* 20. PLACEHOLDER CONTENT */
+/* ===================================== */
+
 .placeholder-content {
   display: flex;
   flex-direction: column;
@@ -864,14 +1014,16 @@ body {
   text-align: left;
 }
 
-/* Loading, messages and placeholders */
+/* ===================================== */
+/* 21. LOADING STATES */
+/* ===================================== */
+
 .loading-message, .no-games-message {
   padding: 20px;
   text-align: center;
   color: var(--text-secondary);
 }
 
-/* Loading indicator */
 .loading {
   display: flex;
   justify-content: center;
@@ -881,10 +1033,41 @@ body {
   color: var(--accent-primary);
 }
 
-/* Loading animation */
-.loading:after {
-  content: ".";
-  animation: dots 1.5s steps(5, end) infinite;
+.loading-state {
+  background-image: url('./Logo.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.loading-box {
+  background: var(--bg-secondary);
+  padding: 40px;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: var(--shadow-light);
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(0, 123, 255, 0.2);
+  border-top: 4px solid var(--accent-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 20px auto;
+}
+
+.loading-box h2 {
+  color: var(--text-primary);
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 @keyframes dots {
@@ -912,7 +1095,306 @@ body {
   }
 }
 
-/* Responsive adjustments */
+.loading:after {
+  content: ".";
+  animation: dots 1.5s steps(5, end) infinite;
+}
+
+/* ===================================== */
+/* 22. AI FEATURES - ORGANIZED */
+/* ===================================== */
+
+/* AI Insights Container */
+.ai-insights-container {
+  background: linear-gradient(45deg, rgba(26, 115, 232, 0.1), rgba(0, 123, 255, 0.1));
+  border: 1px solid rgba(26, 115, 232, 0.2);
+  border-radius: 8px;
+  padding: 15px;
+  margin: 0 auto 15px;
+  max-width: 1200px;
+  width: 100%;
+}
+
+.ai-insights-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.ai-insight-card {
+  background: rgba(255, 255, 255, 0.8);
+  padding: 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid rgba(26, 115, 232, 0.1);
+}
+
+.ai-insight-card:hover {
+  background: rgba(255, 255, 255, 0.95);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(26, 115, 232, 0.2);
+}
+
+.insight-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.insight-header strong {
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+.confidence-badge {
+  background: #28a745;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: bold;
+}
+
+.insight-description {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+.insight-reasoning {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  font-style: italic;
+}
+
+/* Recommendations Container */
+.recommendations-container {
+  background: linear-gradient(45deg, rgba(90, 141, 239, 0.1), rgba(26, 115, 232, 0.1));
+  border: 1px solid rgba(90, 141, 239, 0.2);
+  border-radius: 8px;
+  padding: 15px;
+  margin: 0 auto 15px;
+  max-width: 1200px;
+  width: 100%;
+}
+
+.recommendations-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.recommendation-card {
+  background: rgba(255, 255, 255, 0.8);
+  padding: 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid rgba(90, 141, 239, 0.1);
+}
+
+.recommendation-card:hover {
+  background: rgba(255, 255, 255, 0.95);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(90, 141, 239, 0.2);
+}
+
+.recommendation-card strong {
+  font-size: 14px;
+  color: var(--text-primary);
+  display: block;
+  margin-bottom: 6px;
+}
+
+/* Activity Badges */
+.activity-badge {
+  margin-left: auto;
+  font-size: 10px;
+  background: #e63946;
+  color: white;
+  border-radius: 8px;
+  padding: 2px 5px;
+  min-width: 14px;
+  text-align: center;
+}
+
+.activity-badge.success {
+  background: #28a745;
+}
+
+/* Smart Features */
+.excitement-indicator {
+  margin-left: 8px;
+  font-size: 12px;
+}
+
+.smart-suggestion {
+  background: rgba(26, 115, 232, 0.1);
+  color: #1a73e8;
+  padding: 6px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  cursor: pointer;
+  border: 1px solid rgba(26, 115, 232, 0.2);
+  transition: all 0.2s ease;
+}
+
+.smart-suggestion:hover {
+  background: rgba(26, 115, 232, 0.2);
+  transform: scale(1.05);
+}
+
+.chat-message.current-user {
+  border-left: 3px solid #1a73e8;
+  padding-left: 8px;
+}
+
+.current-user-name {
+  color: #1a73e8 !important;
+  font-weight: bold;
+}
+
+.smart-insight {
+  background: rgba(26, 115, 232, 0.1);
+  padding: 8px;
+  border-radius: 4px;
+  margin-top: 10px;
+  font-size: 12px;
+  border-left: 3px solid #1a73e8;
+}
+
+/* ===================================== */
+/* 23. DASHBOARD FOOTER */
+/* ===================================== */
+
+.dashboard-footer {
+  background-color: var(--bg-tertiary);
+  padding: 10px 20px;
+  width: 100%;
+  max-width: 1200px;
+  border-radius: 8px;
+  margin-top: 20px;
+  transition: background-color 0.3s ease;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.footer-links a {
+  color: var(--text-tertiary);
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+  color: var(--accent-primary);
+}
+
+.disclaimer {
+  font-size: 10px;
+  color: var(--text-secondary);
+  margin-top: 15px;
+  text-align: center;
+}
+
+.disclaimer a {
+  margin: 0 6px;
+}
+
+/* ===================================== */
+/* 24. DARK THEME OVERRIDES */
+/* ===================================== */
+
+[data-theme="dark"] .error-message {
+  background-color: rgba(255, 107, 107, 0.2);
+  color: #ff6b6b;
+  border-left-color: #ff6b6b;
+}
+
+[data-theme="dark"] .success-message {
+  background-color: rgba(40, 167, 69, 0.2);
+  color: #51cf66;
+  border-left-color: #51cf66;
+}
+
+[data-theme="dark"] .content-box {
+  background-color: rgba(30, 30, 30, 0.7);
+  color: white;
+}
+
+[data-theme="dark"] .form-input {
+  background-color: rgba(50, 50, 50, 0.8);
+  color: white;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+[data-theme="dark"] .primary-button {
+  background-color: #4a9eff;
+}
+
+[data-theme="dark"] .secondary-button {
+  background-color: #5a8def;
+}
+
+[data-theme="dark"] .theme-toggle {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+[data-theme="dark"] .theme-toggle:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .cta-section {
+  background: rgba(74, 158, 255, 0.1);
+  border-color: rgba(74, 158, 255, 0.2);
+}
+
+[data-theme="dark"] .ai-insights-container {
+  background: linear-gradient(45deg, rgba(74, 158, 255, 0.1), rgba(90, 141, 239, 0.1));
+  border-color: rgba(74, 158, 255, 0.2);
+}
+
+[data-theme="dark"] .recommendations-container {
+  background: linear-gradient(45deg, rgba(90, 141, 239, 0.1), rgba(74, 158, 255, 0.1));
+  border-color: rgba(90, 141, 239, 0.2);
+}
+
+[data-theme="dark"] .ai-insight-card,
+[data-theme="dark"] .recommendation-card {
+  background: rgba(40, 40, 40, 0.8);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .ai-insight-card:hover,
+[data-theme="dark"] .recommendation-card:hover {
+  background: rgba(50, 50, 50, 0.9);
+}
+
+[data-theme="dark"] .smart-suggestion {
+  background: rgba(74, 158, 255, 0.1);
+  color: #4a9eff;
+  border-color: rgba(74, 158, 255, 0.2);
+}
+
+[data-theme="dark"] .smart-insight {
+  background: rgba(74, 158, 255, 0.1);
+  border-left-color: #4a9eff;
+}
+
+/* ===================================== */
+/* 25. RESPONSIVE DESIGN */
+/* ===================================== */
+
 @media (max-width: 992px) {
   .march-madness-container {
     flex-direction: column;
@@ -948,180 +1430,20 @@ body {
   .global-chat-messages {
     margin-bottom: 20px;
   }
+  
+  .ai-insights-grid,
+  .recommendations-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  
+  .ai-insights-container,
+  .recommendations-container {
+    margin: 0 10px 15px;
+    padding: 12px;
+  }
 }
 
-/* Additional CSS for Smart Features */
-
-/* Loading spinner animation */
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-/* Smart suggestion boxes */
-.smart-suggestion {
-  background: rgba(26, 115, 232, 0.1);
-  color: #1a73e8;
-  padding: 8px;
-  border-radius: 4px;
-  margin-bottom: 12px;
-  font-size: 14px;
-  cursor: pointer;
-  border: 1px solid rgba(26, 115, 232, 0.2);
-  transition: background-color 0.2s ease;
-}
-
-.smart-suggestion:hover {
-  background: rgba(26, 115, 232, 0.15);
-}
-
-/* Enhanced chat message styles for current user */
-.chat-message.current-user {
-  border-left: 3px solid #1a73e8;
-  padding-left: 8px;
-}
-
-.current-user-name {
-  color: #1a73e8 !important;
-  font-weight: bold;
-}
-
-/* Password strength indicator */
-.password-strength-bar {
-  height: 4px;
-  background: #e0e0e0;
-  border-radius: 2px;
-  overflow: hidden;
-  margin-top: 5px;
-}
-
-.password-strength-fill {
-  height: 100%;
-  transition: all 0.3s ease;
-  border-radius: 2px;
-}
-
-.password-strength-weak { background-color: #dc3545; }
-.password-strength-medium { background-color: #ffc107; }
-.password-strength-strong { background-color: #28a745; }
-
-/* Smart recommendations panel */
-.recommendations-panel {
-  background: linear-gradient(45deg, rgba(26, 115, 232, 0.1), rgba(0, 123, 255, 0.1));
-  border: 1px solid rgba(26, 115, 232, 0.2);
-  border-radius: 8px;
-  padding: 15px;
-  margin: 0 auto 20px;
-  max-width: 1200px;
-  width: 100%;
-}
-
-.recommendation-item {
-  background: rgba(255, 255, 255, 0.7);
-  padding: 10px;
-  border-radius: 4px;
-  margin-bottom: 8px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.recommendation-item:hover {
-  background: rgba(255, 255, 255, 0.9);
-}
-
-/* Enhanced button states */
-.primary-button:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-}
-
-.primary-button.loading {
-  position: relative;
-}
-
-/* Activity badges */
-.activity-badge {
-  margin-left: auto;
-  font-size: 12px;
-  background: #e63946;
-  color: white;
-  border-radius: 10px;
-  padding: 2px 6px;
-  min-width: 16px;
-  text-align: center;
-}
-
-.activity-badge.success {
-  background: #28a745;
-}
-
-/* Enhanced game excitement indicators */
-.game-row .excitement-indicator {
-  margin-left: 8px;
-  font-size: 12px;
-}
-
-/* Smart insight boxes */
-.smart-insight {
-  background: rgba(26, 115, 232, 0.1);
-  padding: 8px;
-  border-radius: 4px;
-  margin-top: 10px;
-  font-size: 12px;
-}
-
-/* FIXED: Theme toggle button */
-.theme-toggle {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  background: rgba(255, 255, 255, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  cursor: pointer;
-  font-size: 20px;
-  z-index: 1000;
-  backdrop-filter: blur(10px);
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.theme-toggle:hover {
-  background: rgba(255, 255, 255, 0.3);
-  transform: scale(1.1);
-}
-
-/* Dark theme override for theme toggle */
-[data-theme="dark"] .theme-toggle {
-  background: rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-[data-theme="dark"] .theme-toggle:hover {
-  background: rgba(0, 0, 0, 0.3);
-}
-
-/* Enhanced error and success messages */
-.error-message, .success-message {
-  position: relative;
-  line-height: 1.4;
-}
-
-.error-message::before {
-  content: "⚠️ ";
-  margin-right: 5px;
-}
-
-.success-message::before {
-  content: "✅ ";
-  margin-right: 5px;
-}
-
-/* Responsive improvements for smart features */
 @media (max-width: 768px) {
   .theme-toggle {
     width: 40px;
@@ -1131,626 +1453,81 @@ body {
     right: 15px;
   }
   
-  .recommendations-panel {
-    margin: 0 10px 20px;
-    padding: 12px;
-  }
-  
-  .smart-suggestion {
-    font-size: 13px;
-    padding: 6px;
-  }
-}
-
-/* Dark theme support for form elements */
-[data-theme="dark"] .content-box {
-  background-color: rgba(30, 30, 30, 0.7);
-  color: white;
-}
-
-[data-theme="dark"] .form-input {
-  background-color: rgba(50, 50, 50, 0.8);
-  color: white;
-  border-color: rgba(255, 255, 255, 0.3);
-}
-
-[data-theme="dark"] .primary-button {
-  background-color: #4a9eff;
-}
-
-[data-theme="dark"] .secondary-button {
-  background-color: #5a8def;
-}
-
-/* ======================================= */
-/* HOMEPAGE SPECIFIC STYLES - FIXED AND COMPACT */
-/* ======================================= */
-
-/* FIXED: Homepage content box - compact size */
-.content-box.homepage-content {
-  max-width: 480px !important; /* REDUCED: Smaller to fit better */
-  padding: 25px 20px !important; /* REDUCED: Less padding */
-  /* Uses the CSS variable for proper transparency */
-}
-
-/* FIXED: Main branding section - compact */
-.main-branding {
-  margin-bottom: 20px; /* REDUCED: Less space */
-}
-
-/* FIXED: Main title - smaller and theme-aware */
-.main-title {
-  font-size: 42px !important; /* REDUCED: Smaller title */
-  font-weight: 900 !important;
-  margin-bottom: 8px !important; /* REDUCED: Less margin */
-  color: var(--text-primary) !important; /* FIXED: Use theme variable */
-  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.3);
-  line-height: 1.1;
-}
-
-/* FIXED: Subtitle - smaller and theme-aware */
-.main-subtitle {
-  font-size: 18px !important; /* REDUCED: Smaller subtitle */
-  color: var(--accent-primary) !important; /* FIXED: Use theme variable */
-  margin-bottom: 15px !important; /* REDUCED: Less margin */
-  font-weight: 600 !important;
-  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.3);
-}
-
-/* FIXED: Features grid - more compact */
-.features-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); /* REDUCED: Smaller cards */
-  gap: 15px; /* REDUCED: Less gap */
-  margin: 20px 0; /* REDUCED: Less margin */
-}
-
-/* FIXED: Feature cards - compact and theme-aware */
-.feature-card {
-  background: var(--bg-secondary) !important; /* FIXED: Use theme variable */
-  border: 1px solid var(--border-color) !important; /* FIXED: Use theme variable */
-  border-radius: 8px;
-  padding: 15px 10px; /* REDUCED: Less padding */
-  transition: all 0.3s ease;
-}
-
-.feature-card:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-light) !important; /* FIXED: Use theme variable */
-  border-color: var(--accent-primary) !important; /* FIXED: Use theme variable */
-}
-
-.feature-icon {
-  font-size: 28px; /* REDUCED: Smaller icons */
-  margin-bottom: 8px; /* REDUCED: Less margin */
-  display: block;
-}
-
-.feature-card h3 {
-  font-size: 18px !important;
-  font-weight: 600 !important;
-  margin: 0 0 8px 0 !important;
-  color: var(--text-primary) !important; /* FIXED: Use theme variable */
-}
-
-.feature-card p {
-  font-size: 14px !important;
-  margin: 0 !important;
-  color: var(--text-secondary) !important; /* FIXED: Use theme variable */
-  line-height: 1.4;
-}
-
-/* FIXED: Call to action section - compact */
-.cta-section {
-  margin: 20px 0; /* REDUCED: Less margin */
-  padding: 20px 15px; /* REDUCED: Less padding */
-  background: rgba(26, 115, 232, 0.1) !important;
-  border-radius: 8px;
-  border: 1px solid rgba(26, 115, 232, 0.2);
-}
-
-/* Dark theme override for CTA section */
-[data-theme="dark"] .cta-section {
-  background: rgba(74, 158, 255, 0.1) !important;
-  border-color: rgba(74, 158, 255, 0.2);
-}
-
-.cta-text {
-  font-size: 18px !important; /* REDUCED: Smaller text */
-  font-weight: 600 !important;
-  margin: 0 0 8px 0 !important; /* REDUCED: Less margin */
-  color: var(--accent-primary) !important;
-  line-height: 1.3;
-}
-
-.cta-description {
-  font-size: 14px !important; /* REDUCED: Smaller description */
-  margin: 0 !important;
-  color: var(--text-secondary) !important;
-  line-height: 1.4; /* REDUCED: Tighter line height */
-}
-
-/* FIXED: Action buttons - compact */
-.action-buttons {
-  margin: 20px 0; /* REDUCED: Less margin */
-  display: flex;
-  flex-direction: column;
-  gap: 10px; /* REDUCED: Less gap */
-}
-
-.button-link {
-  text-decoration: none;
-}
-
-/* FIXED: Enhanced buttons for homepage - theme colors */
-.primary-button.cta-button {
-  font-size: 18px !important;
-  padding: 15px 0 !important;
-  background: linear-gradient(135deg, var(--accent-primary), var(--accent-hover)) !important;
-  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3) !important;
-}
-
-/* FIXED: Secondary button - no more orange, uses theme colors */
-.secondary-button.signup-button {
-  background: linear-gradient(135deg, var(--accent-secondary), var(--accent-primary)) !important; /* FIXED: Blue theme colors */
-  color: white !important;
-  font-size: 16px !important;
-  padding: 12px 0 !important;
-  box-shadow: 0 4px 12px rgba(26, 115, 232, 0.3) !important; /* FIXED: Blue shadow */
-}
-
-.secondary-button.signup-button:hover {
-  transform: translateY(-1px) !important;
-  background: linear-gradient(135deg, var(--accent-hover), var(--accent-secondary)) !important; /* FIXED: Theme colors */
-}
-
-/* FIXED: Stats section - compact and theme-aware */
-.stats-section {
-  display: flex;
-  justify-content: space-around;
-  margin: 15px 0 15px 0; /* REDUCED: Less margin */
-  padding: 15px 0; /* REDUCED: Less padding */
-  border-top: 2px solid var(--border-color) !important; /* FIXED: Use theme variable */
-  border-bottom: 2px solid var(--border-color) !important; /* FIXED: Use theme variable */
-  background: var(--bg-tertiary) !important; /* FIXED: Use theme variable */
-  border-radius: 8px;
-}
-
-.stat-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 5px;
-}
-
-.stat-number {
-  font-size: 24px !important;
-  font-weight: bold !important;
-  color: var(--accent-primary) !important; /* FIXED: Use theme variable */
-}
-
-.stat-label {
-  font-size: 13px !important;
-  color: var(--text-tertiary) !important; /* FIXED: Use theme variable */
-  font-weight: 500 !important;
-  text-transform: uppercase;
-}
-
-/* FIXED: Loading states - theme-aware */
-.loading-state {
-  background-image: url('./Logo.png') !important;
-  background-size: cover !important;
-  background-position: center !important;
-  background-repeat: no-repeat !important;
-}
-
-.loading-box {
-  background: var(--bg-secondary) !important; /* FIXED: Use theme variable */
-  padding: 40px !important;
-  border-radius: 8px !important;
-  text-align: center !important;
-  box-shadow: var(--shadow-light) !important; /* FIXED: Use theme variable */
-}
-
-.loading-spinner {
-  width: 40px !important;
-  height: 40px !important;
-  border: 4px solid rgba(0, 123, 255, 0.2) !important;
-  border-top: 4px solid var(--accent-primary) !important; /* FIXED: Use theme variable */
-  border-radius: 50% !important;
-  animation: spin 1s linear infinite !important;
-  margin: 0 auto 20px auto !important;
-}
-
-.loading-box h2 {
-  color: var(--text-primary) !important; /* FIXED: Use theme variable */
-  margin: 0 !important;
-  font-size: 20px !important;
-  font-weight: 600 !important;
-}
-
-/* FIXED: Responsive enhancements - more compact */
-@media (max-width: 768px) {
-  .content-box.homepage-content {
-    padding: 20px 15px !important; /* REDUCED: Less padding on mobile */
-    margin: 10px !important;
+  .content-box {
+    padding: 20px 15px;
+    margin: 10px;
   }
   
   .main-title {
-    font-size: 32px !important; /* REDUCED: Smaller on mobile */
+    font-size: 32px;
   }
   
   .main-subtitle {
-    font-size: 16px !important; /* REDUCED: Smaller on mobile */
+    font-size: 16px;
   }
   
   .features-grid {
-    grid-template-columns: 1fr !important;
-    gap: 12px !important; /* REDUCED: Less gap on mobile */
+    grid-template-columns: 1fr;
+    gap: 12px;
   }
   
   .stats-section {
-    flex-direction: column !important;
-    gap: 10px !important; /* REDUCED: Less gap */
-    text-align: center !important;
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
   }
   
-  .theme-toggle {
-    width: 45px !important;
-    height: 45px !important;
-    font-size: 18px !important;
-    top: 15px !important;
-    right: 15px !important;
+  .ai-insights-container,
+  .recommendations-container {
+    margin: 0 5px 10px;
+    padding: 10px;
+  }
+  
+  .insight-header strong,
+  .recommendation-card strong {
+    font-size: 13px;
+  }
+  
+  .insight-description {
+    font-size: 12px;
+  }
+  
+  .insight-reasoning {
+    font-size: 10px;
   }
 }
+/* ADD THIS CSS OVERRIDE TO FIX DASHBOARD LOGO SIZE */
+/* Add this to the END of your current style.css file */
 
-/* Loading states for better UX */
-.loading-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(255, 255, 255, 0.8);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 100;
-}
+/* ===================================== */
+/* DASHBOARD LOGO SIZE FIX */
+/* ===================================== */
 
-.loading-spinner {
-  width: 32px;
-  height: 32px;
-  border: 3px solid #f3f3f3;
-  border-top: 3px solid #1a73e8;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-/* UNIFORM SIZING FOR AUTH & HOME PAGES ONLY */
-/* Dashboard page excluded - has its own layout */
-
-.home-page .content-box,
-.login-page .content-box,
-.sign-up .content-box {
-  max-width: 450px !important;
-  width: 100% !important;
-  padding: 30px 25px !important;
-  margin: 0 auto !important;
-}
-
-/* Standardize titles for non-dashboard pages */
-.home-page .page-title,
-.home-page .main-title,
-.login-page .page-title,
-.sign-up .page-title {
-  font-size: 28px !important;
-  margin-bottom: 15px !important;
-  font-weight: bold !important;
-}
-
-/* Standardize buttons for non-dashboard pages */
-.home-page .primary-button,
-.home-page .secondary-button,
-.login-page .primary-button,
-.login-page .secondary-button,
-.sign-up .primary-button,
-.sign-up .secondary-button {
-  padding: 15px 0 !important;
-  font-size: 16px !important;
-  margin: 12px 0 !important;
-  font-weight: bold !important;
-}
-
-/* Standardize feature cards for homepage */
-.home-page .features-grid {
-  gap: 15px !important;
-  margin: 20px 0 !important;
-}
-
-.home-page .feature-card {
-  padding: 20px 15px !important;
-}
-
-/* Override blue text on homepage - MUST be at the end */
-.home-page .main-subtitle {
-  color: black !important;
-}
-
-.home-page .cta-text {
-  color: black !important;
-}
-
-/* Also override any accent-primary colors on homepage */
-.home-page .main-subtitle,
-.home-page .cta-text {
-  color: black !important;
-}
-
-/* Make blue text black on login page */
-.login-page .page-title {
-  color: black !important;
-}
-
-.login-page .forgot-password a {
-  color: black !important;
-}
-
-.login-page .link-row a {
-  color: black !important;
-}
-
-.login-page .disclaimer a {
-  color: black !important;
-}
-
-/* Catch any other blue links on login page */
-.login-page a {
-  color: black !important;
-}
-
-/* Make login page title and subtitle black */
-.login-page .content-box .page-title,
-.login-page .content-box h2 {
-  color: black !important;
-  background: none !important;
-  -webkit-background-clip: unset !important;
-  -webkit-text-fill-color: black !important;
-}
-
-/* Make the subtitle black too */
-.login-page .content-box p,
-.login-page .content-box .page-subtitle {
-  color: black !important;
-}
-
-/* Remove any gradient styling */
-.login-page h2[style*="gradient"] {
-  background: none !important;
-  -webkit-background-clip: unset !important;
-  -webkit-text-fill-color: black !important;
-}
-/* DASHBOARD PAGE SPECIFIC FIXES */
-/* Add these styles to your existing CSS file */
-
-/* 1. FIX BACKGROUND LOGO SIZE - Make it match other pages */
+/* Override dashboard background to match login page exactly */
 .dashboard-page {
-  background-image: url('./Logo.png');
-  background-size: 40% !important; /* REDUCED: Make logo smaller like other pages */
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed; /* Keep it fixed but smaller */
-}
-
-/* Alternative approach - if the above doesn't work, try this: */
-.dashboard-page::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: url('./Logo.png');
-  background-size: 40% !important; /* Smaller background logo */
-  background-position: center;
-  background-repeat: no-repeat;
-  opacity: 0.3; /* Make it more subtle */
-  z-index: -1;
-  pointer-events: none;
-}
-
-/* 2. FIX EXPERT INSIGHTS CARDS - Make them smaller like homepage */
-.recommendations-panel {
-  background: linear-gradient(45deg, rgba(26, 115, 232, 0.1), rgba(0, 123, 255, 0.1));
-  border: 1px solid rgba(26, 115, 232, 0.2);
-  border-radius: 8px;
-  padding: 12px !important; /* REDUCED: Less padding */
-  margin: 0 auto 15px; /* REDUCED: Less margin */
-  max-width: 1200px;
-  width: 100%;
-}
-
-.recommendations-panel h4 {
-  font-size: 16px !important; /* REDUCED: Smaller title */
-  margin: 0 0 8px 0 !important; /* REDUCED: Less margin */
-}
-
-.recommendation-item {
-  background: rgba(255, 255, 255, 0.7);
-  padding: 8px !important; /* REDUCED: Less padding like homepage cards */
-  border-radius: 4px;
-  margin-bottom: 6px !important; /* REDUCED: Less margin */
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-  font-size: 14px !important; /* REDUCED: Smaller text */
-}
-
-.recommendation-item strong {
-  font-size: 14px !important; /* REDUCED: Smaller titles */
-  display: block;
-  margin-bottom: 4px;
-}
-
-.recommendation-item div {
-  font-size: 12px !important; /* REDUCED: Smaller description text */
-  line-height: 1.3;
-}
-
-/* 3. FIX MAIN CONTENT OPACITY - Reduce background blur/opacity */
-.march-madness-container {
-  display: flex;
-  width: 100%;
-  max-width: 1200px;
-  background-color: rgba(255, 255, 255, 0.85) !important; /* INCREASED: Less transparent, more readable */
-  border-radius: 8px;
-  box-shadow: var(--shadow-medium);
-  overflow: hidden;
-  height: calc(100vh - 180px);
-  transition: background-color 0.3s ease;
-  backdrop-filter: blur(5px) !important; /* REDUCED: Less blur for better readability */
-}
-
-/* Dark theme override for better readability */
-[data-theme="dark"] .march-madness-container {
-  background-color: rgba(30, 30, 30, 0.85) !important; /* INCREASED: Less transparent in dark mode */
-}
-
-/* 4. FIX SPECIFIC INSIGHT CARD SIZING - Match homepage feature cards */
-.dashboard-page .recommendation-item {
-  min-height: auto !important; /* Remove fixed height */
-  max-width: none !important;
-  display: block !important;
-}
-
-/* Make confidence badges smaller */
-.recommendation-item span[style*="background"] {
-  font-size: 10px !important;
-  padding: 2px 5px !important;
-  margin-left: 8px !important;
-}
-
-/* 5. FIX CONTENT READABILITY - Ensure text is visible */
-.main-content {
-  flex: 1;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  border-right: 1px solid var(--border-color);
-  background-color: rgba(255, 255, 255, 0.1) !important; /* REDUCED: Much less opacity */
-  backdrop-filter: blur(2px) !important; /* REDUCED: Minimal blur */
-}
-
-[data-theme="dark"] .main-content {
-  background-color: rgba(0, 0, 0, 0.1) !important; /* REDUCED: Much less opacity in dark mode */
-}
-
-/* 6. FIX SIDEBAR READABILITY */
-.sidebar {
-  width: 200px;
-  background-color: rgba(26, 26, 46, 0.95) !important; /* Keep sidebar readable */
-  color: var(--text-light);
-  padding: 15px 0;
-  transition: background-color 0.3s ease;
-}
-
-/* 7. ENSURE GAMES LIST IS READABLE */
-.games-list {
-  flex: 1;
-  overflow-y: auto;
-  background-color: rgba(255, 255, 255, 0.05) !important; /* Very subtle background */
-}
-
-.game-row {
-  display: flex;
-  padding: 15px;
-  border-bottom: 1px solid var(--border-color);
-  cursor: pointer;
-  transition: background-color 0.2s;
-  color: var(--text-primary);
-  background-color: rgba(255, 255, 255, 0.02) !important; /* Very subtle background */
-}
-
-.game-row:hover {
-  background-color: rgba(255, 255, 255, 0.1) !important; /* Subtle hover effect */
-}
-
-/* 8. FIX GAME DETAIL PANEL READABILITY */
-.game-detail {
-  width: 350px;
+  align-items: center;
+  justify-content: flex-start;
+  background-image: url('./Logo.png');
+  background-size: 800px 600px !important; /* FIXED: Specific size like login page */
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-color: var(--bg-primary);
   padding: 20px;
-  background-color: rgba(248, 249, 250, 0.9) !important; /* More opaque for readability */
-  overflow-y: auto;
   transition: background-color 0.3s ease;
-  backdrop-filter: blur(3px) !important; /* Minimal blur */
 }
 
-[data-theme="dark"] .game-detail {
-  background-color: rgba(40, 40, 40, 0.9) !important; /* More opaque in dark mode */
-}
-
-/* 9. ADDITIONAL READABILITY IMPROVEMENTS */
-.header-row {
-  display: flex;
-  padding: 10px 15px;
-  font-weight: bold;
-  border-bottom: 1px solid var(--border-color);
-  background-color: rgba(248, 249, 250, 0.8) !important; /* More opaque header */
-  color: var(--text-primary);
-}
-
-[data-theme="dark"] .header-row {
-  background-color: rgba(40, 40, 40, 0.8) !important;
-}
-
-/* 10. FIX TAB READABILITY */
-.tabs {
-  display: flex;
-  border-bottom: 1px solid var(--border-color);
-  background-color: rgba(255, 255, 255, 0.1) !important; /* Subtle background */
-}
-
-.tab {
-  padding: 15px 20px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: all 0.2s;
-  color: var(--text-primary);
-  border-bottom: 2px solid transparent;
-  background-color: rgba(255, 255, 255, 0.05) !important; /* Very subtle background */
-}
-
-.tab:hover {
-  background-color: rgba(255, 255, 255, 0.15) !important;
-  color: var(--text-primary);
-}
-
-.tab.active {
-  border-bottom-color: var(--accent-secondary);
-  color: var(--accent-secondary);
-  background-color: rgba(255, 255, 255, 0.2) !important;
-}
-
-/* 11. RESPONSIVE FIXES */
-@media (max-width: 992px) {
+/* Alternative fix - if the above doesn't work exactly */
+@media (max-width: 1200px) {
   .dashboard-page {
-    background-size: 60% !important; /* Slightly larger on mobile but still controlled */
-  }
-  
-  .recommendations-panel {
-    margin: 0 10px 15px;
-    padding: 10px !important;
-  }
-  
-  .recommendation-item {
-    padding: 6px !important;
-    font-size: 13px !important;
+    background-size: 70% !important;
   }
 }
 
 @media (max-width: 768px) {
   .dashboard-page {
-    background-size: 80% !important; /* Larger on small screens */
+    background-size: 90% !important;
   }
-}
-/* Smooth transitions for theme switching */
-* {
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }

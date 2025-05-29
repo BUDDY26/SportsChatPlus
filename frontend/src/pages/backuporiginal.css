@@ -1,0 +1,1536 @@
+/* SportsChatPlus Complete Styling */
+/* Your original design + Dark/Light theme support */
+/* ================================================ */
+
+/* CSS Variables for Theme System */
+:root {
+  /* Light Theme (Default) */
+  --bg-primary: #f0f0f0;
+  --bg-secondary: rgba(255, 255, 255, 0.4);
+  --bg-tertiary: rgba(248, 249, 250, 0.4);
+  --bg-sidebar: rgba(26, 26, 46, 0.9);
+  --bg-header: rgba(26, 26, 46, 0.9);
+  
+  --text-primary: #000;
+  --text-secondary: #333;
+  --text-tertiary: #666;
+  --text-muted: #999;
+  --text-light: white;
+  
+  --border-color: rgba(233, 236, 239, 0.5);
+  --border-hover: rgba(0, 0, 0, 0.2);
+  
+  --accent-primary: #007bff;
+  --accent-hover: #0069d9;
+  --accent-secondary: #1a73e8;
+  --accent-danger: #e63946;
+  
+  --shadow-light: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --shadow-medium: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Dark Theme - FIXED */
+[data-theme="dark"] {
+  --bg-primary: #1a1a1a;
+  --bg-secondary: rgba(30, 30, 30, 0.4);
+  --bg-tertiary: rgba(40, 40, 40, 0.4);
+  --bg-sidebar: rgba(15, 15, 25, 0.95);
+  --bg-header: rgba(15, 15, 25, 0.95);
+  
+  --text-primary: #ffffff;
+  --text-secondary: #e0e0e0;
+  --text-tertiary: #b0b0b0;
+  --text-muted: #888;
+  --text-light: white;
+  
+  --border-color: rgba(70, 70, 70, 0.5);
+  --border-hover: rgba(255, 255, 255, 0.2);
+  
+  --accent-primary: #4a9eff;
+  --accent-hover: #357abd;
+  --accent-secondary: #5a8def;
+  --accent-danger: #ff6b6b;
+  
+  --shadow-light: 0 4px 12px rgba(0, 0, 0, 0.3);
+  --shadow-medium: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Base Styles with Theme Support */
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Common background for all pages */
+.home-page, .login-page, .sign-up, .dashboard-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-image: url('./Logo.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: var(--bg-primary);
+  padding: 20px;
+  transition: background-color 0.3s ease;
+}
+
+/* FIXED: Content box styling - proper transparency and size */
+.content-box {
+  background-color: var(--bg-secondary);
+  border-radius: 8px;
+  padding: 20px;
+  max-width: 480px; /* REDUCED: Smaller to fit without scrolling */
+  width: 100%;
+  text-align: center;
+  box-shadow: var(--shadow-light);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  backdrop-filter: blur(10px); /* ADDED: For better glass effect */
+  border: 1px solid rgba(255, 255, 255, 0.2); /* ADDED: Subtle border */
+}
+
+/* Special content box for login/signup pages */
+.login-page .content-box,
+.sign-up .content-box {
+  max-width: 400px;
+}
+
+/* Page titles */
+.page-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 15px;
+  color: var(--text-primary);
+}
+
+/* Paragraph text */
+.content-box p {
+  margin-bottom: 12px;
+  font-size: 15px;
+  color: var(--text-secondary);
+}
+
+/* Form elements */
+.form-group {
+  margin-bottom: 12px;
+  text-align: left;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 3px;
+  font-weight: 500;
+  color: var(--text-primary);
+  font-size: 15px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 15px;
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
+}
+
+/* Password field with show button */
+.password-container {
+  position: relative;
+}
+
+.show-password {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 12px;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.show-password:hover {
+  color: var(--accent-primary);
+}
+
+/* Password hint */
+.password-hint {
+  font-size: 13px;
+  color: var(--text-tertiary);
+  margin-top: 3px;
+  text-align: left;
+}
+
+/* Buttons */
+.primary-button {
+  background-color: var(--accent-primary);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 0;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  width: 100%;
+  margin: 12px 0;
+  transition: background-color 0.3s ease, opacity 0.3s ease;
+}
+
+.primary-button:hover:not(:disabled) {
+  background-color: var(--accent-hover);
+}
+
+.primary-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* FIXED: Secondary button - consistent with theme */
+.secondary-button {
+  background-color: var(--accent-secondary);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 0;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  width: 100%;
+  margin: 12px 0;
+  transition: background-color 0.3s ease;
+}
+
+.secondary-button:hover {
+  background-color: var(--accent-hover);
+}
+
+/* Links */
+.content-box a {
+  color: var(--accent-primary);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.content-box a:hover {
+  text-decoration: underline;
+  color: var(--accent-hover);
+}
+
+/* Link row */
+.link-row {
+  margin: 10px 0;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+/* Forgot password */
+.forgot-password {
+  text-align: right;
+  margin: 5px 0;
+  font-size: 14px;
+}
+
+/* Disclaimer */
+.disclaimer {
+  font-size: 10px;
+  color: var(--text-secondary);
+  margin-top: 15px;
+  text-align: center;
+}
+
+.disclaimer a {
+  margin: 0 6px;
+}
+
+/* Error and success messages */
+.error-message {
+  background-color: rgba(220, 53, 69, 0.1);
+  color: #dc3545;
+  padding: 6px;
+  border-radius: 4px;
+  margin-bottom: 12px;
+  font-size: 14px;
+  border-left: 4px solid #dc3545;
+}
+
+[data-theme="dark"] .error-message {
+  background-color: rgba(255, 107, 107, 0.2);
+  color: #ff6b6b;
+  border-left-color: #ff6b6b;
+}
+
+.success-message {
+  background-color: rgba(40, 167, 69, 0.1);
+  color: #28a745;
+  padding: 6px;
+  border-radius: 4px;
+  margin-bottom: 12px;
+  font-size: 14px;
+  border-left: 4px solid #28a745;
+}
+
+[data-theme="dark"] .success-message {
+  background-color: rgba(40, 167, 69, 0.2);
+  color: #51cf66;
+  border-left-color: #51cf66;
+}
+
+/* ==================== */
+/* DASHBOARD PAGE STYLES */
+/* ==================== */
+
+/* Dashboard Page Layout */
+.dashboard-page {
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.dashboard-header {
+  background-color: var(--bg-header);
+  color: var(--text-light);
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: var(--shadow-medium);
+  width: 100%;
+  max-width: 1200px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  transition: background-color 0.3s ease;
+}
+
+.logo-container h1 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--text-light);
+}
+
+.user-controls {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.username {
+  font-size: 14px;
+  color: var(--text-light);
+}
+
+.logout-button {
+  background-color: var(--accent-danger);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 10px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.logout-button:hover {
+  background-color: #d32f2f;
+}
+
+.dashboard-content {
+  flex: 1;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.dashboard-footer {
+  background-color: var(--bg-tertiary);
+  padding: 10px 20px;
+  width: 100%;
+  max-width: 1200px;
+  border-radius: 8px;
+  margin-top: 20px;
+  transition: background-color 0.3s ease;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.footer-links a {
+  color: var(--text-tertiary);
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+  color: var(--accent-primary);
+}
+
+/* March Madness Component Styles */
+.march-madness-container {
+  display: flex;
+  width: 100%;
+  max-width: 1200px;
+  background-color: var(--bg-secondary);
+  border-radius: 8px;
+  box-shadow: var(--shadow-medium);
+  overflow: hidden;
+  height: calc(100vh - 180px);
+  transition: background-color 0.3s ease;
+}
+
+.sidebar {
+  width: 200px;
+  background-color: var(--bg-sidebar);
+  color: var(--text-light);
+  padding: 15px 0;
+  transition: background-color 0.3s ease;
+}
+
+.menu-items {
+  display: flex;
+  flex-direction: column;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-size: 16px;
+  color: var(--text-light);
+}
+
+.menu-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.menu-item.active {
+  background-color: var(--accent-secondary);
+  border-left: 4px solid var(--accent-primary);
+}
+
+.icon {
+  margin-right: 10px;
+  width: 20px;
+  height: 20px;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Icons using emoji for simplicity */
+.game-icon::before { content: "🏀"; }
+.bracket-icon::before { content: "🔄"; }
+.team-icon::before { content: "👥"; }
+.coin-icon::before { content: "💰"; }
+.chat-icon::before { content: "💬"; }
+.stats-icon::before { content: "📊"; }
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--border-color);
+  background-color: transparent;
+}
+
+.tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border-color);
+  background-color: transparent;
+}
+
+.tab {
+  padding: 15px 20px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s;
+  color: var(--text-secondary);
+  border-bottom: 2px solid transparent;
+}
+
+.tab:hover {
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.tab.active {
+  border-bottom-color: var(--accent-secondary);
+  color: var(--accent-secondary);
+  background-color: var(--bg-tertiary);
+}
+
+.games-list {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.header-row {
+  display: flex;
+  padding: 10px 15px;
+  font-weight: bold;
+  border-bottom: 1px solid var(--border-color);
+  background-color: var(--bg-tertiary);
+  color: var(--text-secondary);
+}
+
+.game-row {
+  display: flex;
+  padding: 15px;
+  border-bottom: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: background-color 0.2s;
+  color: var(--text-primary);
+}
+
+.game-row:hover {
+  background-color: var(--bg-tertiary);
+}
+
+.game-row.selected {
+  background-color: rgba(26, 115, 232, 0.1);
+  border-left: 4px solid var(--accent-primary);
+}
+
+.match-up {
+  flex: 2;
+  font-weight: 500;
+}
+
+.time {
+  flex: 1;
+  text-align: center;
+  color: var(--text-tertiary);
+}
+
+.spread {
+  flex: 1;
+  text-align: right;
+  color: var(--text-tertiary);
+}
+
+.live-indicator {
+  color: #ff4444;
+  font-weight: bold;
+}
+
+.score {
+  font-weight: bold;
+  color: var(--text-primary);
+}
+
+.game-detail {
+  width: 350px;
+  padding: 20px;
+  background-color: var(--bg-tertiary);
+  overflow-y: auto;
+  transition: background-color 0.3s ease;
+}
+
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.game-header h2 {
+  margin: 0;
+  font-size: 20px;
+  color: var(--text-primary);
+}
+
+.live-badge {
+  background-color: #ff4444;
+  color: white;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.game-info {
+  margin-bottom: 20px;
+}
+
+.info-item {
+  margin-bottom: 10px;
+  display: flex;
+  color: var(--text-secondary);
+}
+
+.info-item label {
+  font-weight: 500;
+  min-width: 100px;
+  color: var(--text-primary);
+}
+
+.score-display {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: var(--bg-secondary);
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.team-score {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.team {
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.score {
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--text-primary);
+}
+
+.versus {
+  text-align: center;
+  margin: 5px 0;
+  color: var(--text-tertiary);
+}
+
+.period {
+  text-align: center;
+  margin-top: 10px;
+  color: #ff4444;
+  font-weight: 500;
+}
+
+.betting-section {
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: var(--bg-secondary);
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.betting-section h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: var(--text-primary);
+}
+
+.betting-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.bet-button {
+  flex: 1;
+  background-color: var(--accent-primary);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.bet-button:hover {
+  background-color: var(--accent-hover);
+}
+
+.bet-note {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  text-align: center;
+  margin-top: 10px;
+}
+
+.chat-section {
+  border-top: 1px solid var(--border-color);
+  padding-top: 20px;
+}
+
+.chat-section h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: var(--text-primary);
+}
+
+.chat-messages {
+  height: 200px;
+  overflow-y: auto;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 10px;
+  margin-bottom: 15px;
+  background-color: var(--bg-secondary);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.empty-chat {
+  color: var(--text-muted);
+  font-style: italic;
+  text-align: center;
+  padding: 20px 0;
+}
+
+.chat-message {
+  margin-bottom: 15px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.chat-message:last-child {
+  border-bottom: none;
+}
+
+.message-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.message-user {
+  font-weight: bold;
+  color: var(--accent-primary);
+  display: inline-block;
+  margin-right: 5px;
+}
+
+.message-time {
+  font-size: 12px;
+  color: var(--text-tertiary);
+}
+
+.message-content {
+  margin-top: 5px;
+  padding-left: 5px;
+  line-height: 1.4;
+  color: var(--text-primary);
+}
+
+/* Chat input styles - unified */
+.chat-input {
+  display: flex;
+  width: calc(100% - 10px);
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.chat-input input {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 16px;
+  background-color: var(--bg-secondary);
+  height: 44px;
+  box-shadow: var(--shadow-light);
+  color: var(--text-primary);
+  max-width: calc(100% - 100px);
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.chat-input input:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
+}
+
+.chat-input button {
+  background-color: var(--accent-primary);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 0 20px;
+  height: 44px;
+  min-width: 80px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.chat-input button:hover:not(:disabled) {
+  background-color: var(--accent-hover);
+}
+
+.chat-input button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Global chat container */
+.global-chat-container {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  background-color: transparent;
+  height: 100%;
+  position: relative;
+}
+
+.global-chat-header {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.global-chat-header h2 {
+  margin: 0 0 10px 0;
+  color: var(--text-primary);
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.global-chat-header p {
+  color: var(--text-secondary);
+  font-size: 16px;
+  margin: 0;
+}
+
+.global-chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 15px;
+  margin-bottom: 65px;
+  background-color: var(--bg-secondary);
+  min-height: 400px;
+  max-height: calc(100vh - 280px);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.global-chat-messages .chat-message {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.global-chat-messages .chat-message:last-child {
+  border-bottom: none;
+}
+
+.global-chat-container .chat-input {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  width: calc(100% - 40px);
+  margin: 0;
+}
+
+/* Placeholder content */
+.placeholder-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  height: 100%;
+  color: var(--text-secondary);
+  text-align: left;
+  padding: 20px;
+  background-color: transparent;
+}
+
+.placeholder-content h2 {
+  color: var(--text-primary);
+  margin-bottom: 15px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.placeholder-content p {
+  color: var(--text-tertiary);
+  max-width: 100%;
+  margin: 0 0 20px 0;
+  text-align: left;
+}
+
+/* Loading, messages and placeholders */
+.loading-message, .no-games-message {
+  padding: 20px;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+/* Loading indicator */
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 20px;
+  color: var(--accent-primary);
+}
+
+/* Loading animation */
+.loading:after {
+  content: ".";
+  animation: dots 1.5s steps(5, end) infinite;
+}
+
+@keyframes dots {
+  0%, 20% {
+    color: rgba(0,0,0,0);
+    text-shadow:
+      .25em 0 0 rgba(0,0,0,0),
+      .5em 0 0 rgba(0,0,0,0);
+  }
+  40% {
+    color: var(--accent-primary);
+    text-shadow:
+      .25em 0 0 rgba(0,0,0,0),
+      .5em 0 0 rgba(0,0,0,0);
+  }
+  60% {
+    text-shadow:
+      .25em 0 0 var(--accent-primary),
+      .5em 0 0 rgba(0,0,0,0);
+  }
+  80%, 100% {
+    text-shadow:
+      .25em 0 0 var(--accent-primary),
+      .5em 0 0 var(--accent-primary);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+  .march-madness-container {
+    flex-direction: column;
+    height: auto;
+  }
+  
+  .sidebar {
+    width: 100%;
+    padding: 10px 0;
+  }
+  
+  .menu-items {
+    flex-direction: row;
+    overflow-x: auto;
+  }
+  
+  .menu-item {
+    padding: 10px;
+    white-space: nowrap;
+  }
+  
+  .game-detail {
+    width: 100%;
+  }
+  
+  .global-chat-container .chat-input {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    width: 100%;
+  }
+  
+  .global-chat-messages {
+    margin-bottom: 20px;
+  }
+}
+
+/* Additional CSS for Smart Features */
+
+/* Loading spinner animation */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Smart suggestion boxes */
+.smart-suggestion {
+  background: rgba(26, 115, 232, 0.1);
+  color: #1a73e8;
+  padding: 8px;
+  border-radius: 4px;
+  margin-bottom: 12px;
+  font-size: 14px;
+  cursor: pointer;
+  border: 1px solid rgba(26, 115, 232, 0.2);
+  transition: background-color 0.2s ease;
+}
+
+.smart-suggestion:hover {
+  background: rgba(26, 115, 232, 0.15);
+}
+
+/* Enhanced chat message styles for current user */
+.chat-message.current-user {
+  border-left: 3px solid #1a73e8;
+  padding-left: 8px;
+}
+
+.current-user-name {
+  color: #1a73e8 !important;
+  font-weight: bold;
+}
+
+/* Password strength indicator */
+.password-strength-bar {
+  height: 4px;
+  background: #e0e0e0;
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: 5px;
+}
+
+.password-strength-fill {
+  height: 100%;
+  transition: all 0.3s ease;
+  border-radius: 2px;
+}
+
+.password-strength-weak { background-color: #dc3545; }
+.password-strength-medium { background-color: #ffc107; }
+.password-strength-strong { background-color: #28a745; }
+
+/* Smart recommendations panel */
+.recommendations-panel {
+  background: linear-gradient(45deg, rgba(26, 115, 232, 0.1), rgba(0, 123, 255, 0.1));
+  border: 1px solid rgba(26, 115, 232, 0.2);
+  border-radius: 8px;
+  padding: 15px;
+  margin: 0 auto 20px;
+  max-width: 1200px;
+  width: 100%;
+}
+
+.recommendation-item {
+  background: rgba(255, 255, 255, 0.7);
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.recommendation-item:hover {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+/* Enhanced button states */
+.primary-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.primary-button.loading {
+  position: relative;
+}
+
+/* Activity badges */
+.activity-badge {
+  margin-left: auto;
+  font-size: 12px;
+  background: #e63946;
+  color: white;
+  border-radius: 10px;
+  padding: 2px 6px;
+  min-width: 16px;
+  text-align: center;
+}
+
+.activity-badge.success {
+  background: #28a745;
+}
+
+/* Enhanced game excitement indicators */
+.game-row .excitement-indicator {
+  margin-left: 8px;
+  font-size: 12px;
+}
+
+/* Smart insight boxes */
+.smart-insight {
+  background: rgba(26, 115, 232, 0.1);
+  padding: 8px;
+  border-radius: 4px;
+  margin-top: 10px;
+  font-size: 12px;
+}
+
+/* FIXED: Theme toggle button */
+.theme-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+  font-size: 20px;
+  z-index: 1000;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.theme-toggle:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
+}
+
+/* Dark theme override for theme toggle */
+[data-theme="dark"] .theme-toggle {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+[data-theme="dark"] .theme-toggle:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* Enhanced error and success messages */
+.error-message, .success-message {
+  position: relative;
+  line-height: 1.4;
+}
+
+.error-message::before {
+  content: "⚠️ ";
+  margin-right: 5px;
+}
+
+.success-message::before {
+  content: "✅ ";
+  margin-right: 5px;
+}
+
+/* Responsive improvements for smart features */
+@media (max-width: 768px) {
+  .theme-toggle {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+    top: 15px;
+    right: 15px;
+  }
+  
+  .recommendations-panel {
+    margin: 0 10px 20px;
+    padding: 12px;
+  }
+  
+  .smart-suggestion {
+    font-size: 13px;
+    padding: 6px;
+  }
+}
+
+/* Dark theme support for form elements */
+[data-theme="dark"] .content-box {
+  background-color: rgba(30, 30, 30, 0.7);
+  color: white;
+}
+
+[data-theme="dark"] .form-input {
+  background-color: rgba(50, 50, 50, 0.8);
+  color: white;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+[data-theme="dark"] .primary-button {
+  background-color: #4a9eff;
+}
+
+[data-theme="dark"] .secondary-button {
+  background-color: #5a8def;
+}
+
+/* ======================================= */
+/* HOMEPAGE SPECIFIC STYLES - FIXED AND COMPACT */
+/* ======================================= */
+
+/* FIXED: Homepage content box - compact size */
+.content-box.homepage-content {
+  max-width: 480px !important; /* REDUCED: Smaller to fit better */
+  padding: 25px 20px !important; /* REDUCED: Less padding */
+  /* Uses the CSS variable for proper transparency */
+}
+
+/* FIXED: Main branding section - compact */
+.main-branding {
+  margin-bottom: 20px; /* REDUCED: Less space */
+}
+
+/* FIXED: Main title - smaller and theme-aware */
+.main-title {
+  font-size: 42px !important; /* REDUCED: Smaller title */
+  font-weight: 900 !important;
+  margin-bottom: 8px !important; /* REDUCED: Less margin */
+  color: var(--text-primary) !important; /* FIXED: Use theme variable */
+  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.3);
+  line-height: 1.1;
+}
+
+/* FIXED: Subtitle - smaller and theme-aware */
+.main-subtitle {
+  font-size: 18px !important; /* REDUCED: Smaller subtitle */
+  color: var(--accent-primary) !important; /* FIXED: Use theme variable */
+  margin-bottom: 15px !important; /* REDUCED: Less margin */
+  font-weight: 600 !important;
+  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.3);
+}
+
+/* FIXED: Features grid - more compact */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); /* REDUCED: Smaller cards */
+  gap: 15px; /* REDUCED: Less gap */
+  margin: 20px 0; /* REDUCED: Less margin */
+}
+
+/* FIXED: Feature cards - compact and theme-aware */
+.feature-card {
+  background: var(--bg-secondary) !important; /* FIXED: Use theme variable */
+  border: 1px solid var(--border-color) !important; /* FIXED: Use theme variable */
+  border-radius: 8px;
+  padding: 15px 10px; /* REDUCED: Less padding */
+  transition: all 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-light) !important; /* FIXED: Use theme variable */
+  border-color: var(--accent-primary) !important; /* FIXED: Use theme variable */
+}
+
+.feature-icon {
+  font-size: 28px; /* REDUCED: Smaller icons */
+  margin-bottom: 8px; /* REDUCED: Less margin */
+  display: block;
+}
+
+.feature-card h3 {
+  font-size: 18px !important;
+  font-weight: 600 !important;
+  margin: 0 0 8px 0 !important;
+  color: var(--text-primary) !important; /* FIXED: Use theme variable */
+}
+
+.feature-card p {
+  font-size: 14px !important;
+  margin: 0 !important;
+  color: var(--text-secondary) !important; /* FIXED: Use theme variable */
+  line-height: 1.4;
+}
+
+/* FIXED: Call to action section - compact */
+.cta-section {
+  margin: 20px 0; /* REDUCED: Less margin */
+  padding: 20px 15px; /* REDUCED: Less padding */
+  background: rgba(26, 115, 232, 0.1) !important;
+  border-radius: 8px;
+  border: 1px solid rgba(26, 115, 232, 0.2);
+}
+
+/* Dark theme override for CTA section */
+[data-theme="dark"] .cta-section {
+  background: rgba(74, 158, 255, 0.1) !important;
+  border-color: rgba(74, 158, 255, 0.2);
+}
+
+.cta-text {
+  font-size: 18px !important; /* REDUCED: Smaller text */
+  font-weight: 600 !important;
+  margin: 0 0 8px 0 !important; /* REDUCED: Less margin */
+  color: var(--accent-primary) !important;
+  line-height: 1.3;
+}
+
+.cta-description {
+  font-size: 14px !important; /* REDUCED: Smaller description */
+  margin: 0 !important;
+  color: var(--text-secondary) !important;
+  line-height: 1.4; /* REDUCED: Tighter line height */
+}
+
+/* FIXED: Action buttons - compact */
+.action-buttons {
+  margin: 20px 0; /* REDUCED: Less margin */
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* REDUCED: Less gap */
+}
+
+.button-link {
+  text-decoration: none;
+}
+
+/* FIXED: Enhanced buttons for homepage - theme colors */
+.primary-button.cta-button {
+  font-size: 18px !important;
+  padding: 15px 0 !important;
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-hover)) !important;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3) !important;
+}
+
+/* FIXED: Secondary button - no more orange, uses theme colors */
+.secondary-button.signup-button {
+  background: linear-gradient(135deg, var(--accent-secondary), var(--accent-primary)) !important; /* FIXED: Blue theme colors */
+  color: white !important;
+  font-size: 16px !important;
+  padding: 12px 0 !important;
+  box-shadow: 0 4px 12px rgba(26, 115, 232, 0.3) !important; /* FIXED: Blue shadow */
+}
+
+.secondary-button.signup-button:hover {
+  transform: translateY(-1px) !important;
+  background: linear-gradient(135deg, var(--accent-hover), var(--accent-secondary)) !important; /* FIXED: Theme colors */
+}
+
+/* FIXED: Stats section - compact and theme-aware */
+.stats-section {
+  display: flex;
+  justify-content: space-around;
+  margin: 15px 0 15px 0; /* REDUCED: Less margin */
+  padding: 15px 0; /* REDUCED: Less padding */
+  border-top: 2px solid var(--border-color) !important; /* FIXED: Use theme variable */
+  border-bottom: 2px solid var(--border-color) !important; /* FIXED: Use theme variable */
+  background: var(--bg-tertiary) !important; /* FIXED: Use theme variable */
+  border-radius: 8px;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.stat-number {
+  font-size: 24px !important;
+  font-weight: bold !important;
+  color: var(--accent-primary) !important; /* FIXED: Use theme variable */
+}
+
+.stat-label {
+  font-size: 13px !important;
+  color: var(--text-tertiary) !important; /* FIXED: Use theme variable */
+  font-weight: 500 !important;
+  text-transform: uppercase;
+}
+
+/* FIXED: Loading states - theme-aware */
+.loading-state {
+  background-image: url('./Logo.png') !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+}
+
+.loading-box {
+  background: var(--bg-secondary) !important; /* FIXED: Use theme variable */
+  padding: 40px !important;
+  border-radius: 8px !important;
+  text-align: center !important;
+  box-shadow: var(--shadow-light) !important; /* FIXED: Use theme variable */
+}
+
+.loading-spinner {
+  width: 40px !important;
+  height: 40px !important;
+  border: 4px solid rgba(0, 123, 255, 0.2) !important;
+  border-top: 4px solid var(--accent-primary) !important; /* FIXED: Use theme variable */
+  border-radius: 50% !important;
+  animation: spin 1s linear infinite !important;
+  margin: 0 auto 20px auto !important;
+}
+
+.loading-box h2 {
+  color: var(--text-primary) !important; /* FIXED: Use theme variable */
+  margin: 0 !important;
+  font-size: 20px !important;
+  font-weight: 600 !important;
+}
+
+/* FIXED: Responsive enhancements - more compact */
+@media (max-width: 768px) {
+  .content-box.homepage-content {
+    padding: 20px 15px !important; /* REDUCED: Less padding on mobile */
+    margin: 10px !important;
+  }
+  
+  .main-title {
+    font-size: 32px !important; /* REDUCED: Smaller on mobile */
+  }
+  
+  .main-subtitle {
+    font-size: 16px !important; /* REDUCED: Smaller on mobile */
+  }
+  
+  .features-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important; /* REDUCED: Less gap on mobile */
+  }
+  
+  .stats-section {
+    flex-direction: column !important;
+    gap: 10px !important; /* REDUCED: Less gap */
+    text-align: center !important;
+  }
+  
+  .theme-toggle {
+    width: 45px !important;
+    height: 45px !important;
+    font-size: 18px !important;
+    top: 15px !important;
+    right: 15px !important;
+  }
+}
+
+/* Loading states for better UX */
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.loading-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #1a73e8;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+/* UNIFORM SIZING FOR AUTH & HOME PAGES ONLY */
+/* Dashboard page excluded - has its own layout */
+
+.home-page .content-box,
+.login-page .content-box,
+.sign-up .content-box {
+  max-width: 450px !important;
+  width: 100% !important;
+  padding: 30px 25px !important;
+  margin: 0 auto !important;
+}
+
+/* Standardize titles for non-dashboard pages */
+.home-page .page-title,
+.home-page .main-title,
+.login-page .page-title,
+.sign-up .page-title {
+  font-size: 28px !important;
+  margin-bottom: 15px !important;
+  font-weight: bold !important;
+}
+
+/* Standardize buttons for non-dashboard pages */
+.home-page .primary-button,
+.home-page .secondary-button,
+.login-page .primary-button,
+.login-page .secondary-button,
+.sign-up .primary-button,
+.sign-up .secondary-button {
+  padding: 15px 0 !important;
+  font-size: 16px !important;
+  margin: 12px 0 !important;
+  font-weight: bold !important;
+}
+
+/* Standardize feature cards for homepage */
+.home-page .features-grid {
+  gap: 15px !important;
+  margin: 20px 0 !important;
+}
+
+.home-page .feature-card {
+  padding: 20px 15px !important;
+}
+
+/* Override blue text on homepage - MUST be at the end */
+.home-page .main-subtitle {
+  color: black !important;
+}
+
+.home-page .cta-text {
+  color: black !important;
+}
+
+/* Also override any accent-primary colors on homepage */
+.home-page .main-subtitle,
+.home-page .cta-text {
+  color: black !important;
+}
+
+/* Make blue text black on login page */
+.login-page .page-title {
+  color: black !important;
+}
+
+.login-page .forgot-password a {
+  color: black !important;
+}
+
+.login-page .link-row a {
+  color: black !important;
+}
+
+.login-page .disclaimer a {
+  color: black !important;
+}
+
+/* Catch any other blue links on login page */
+.login-page a {
+  color: black !important;
+}
+
+/* Make login page title and subtitle black */
+.login-page .content-box .page-title,
+.login-page .content-box h2 {
+  color: black !important;
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  -webkit-text-fill-color: black !important;
+}
+
+/* Make the subtitle black too */
+.login-page .content-box p,
+.login-page .content-box .page-subtitle {
+  color: black !important;
+}
+
+/* Remove any gradient styling */
+.login-page h2[style*="gradient"] {
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  -webkit-text-fill-color: black !important;
+}
+
+/* Smooth transitions for theme switching */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
