@@ -1529,6 +1529,227 @@ body {
   -webkit-background-clip: unset !important;
   -webkit-text-fill-color: black !important;
 }
+/* DASHBOARD PAGE SPECIFIC FIXES */
+/* Add these styles to your existing CSS file */
+
+/* 1. FIX BACKGROUND LOGO SIZE - Make it match other pages */
+.dashboard-page {
+  background-image: url('./Logo.png');
+  background-size: 40% !important; /* REDUCED: Make logo smaller like other pages */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed; /* Keep it fixed but smaller */
+}
+
+/* Alternative approach - if the above doesn't work, try this: */
+.dashboard-page::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('./Logo.png');
+  background-size: 40% !important; /* Smaller background logo */
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0.3; /* Make it more subtle */
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* 2. FIX EXPERT INSIGHTS CARDS - Make them smaller like homepage */
+.recommendations-panel {
+  background: linear-gradient(45deg, rgba(26, 115, 232, 0.1), rgba(0, 123, 255, 0.1));
+  border: 1px solid rgba(26, 115, 232, 0.2);
+  border-radius: 8px;
+  padding: 12px !important; /* REDUCED: Less padding */
+  margin: 0 auto 15px; /* REDUCED: Less margin */
+  max-width: 1200px;
+  width: 100%;
+}
+
+.recommendations-panel h4 {
+  font-size: 16px !important; /* REDUCED: Smaller title */
+  margin: 0 0 8px 0 !important; /* REDUCED: Less margin */
+}
+
+.recommendation-item {
+  background: rgba(255, 255, 255, 0.7);
+  padding: 8px !important; /* REDUCED: Less padding like homepage cards */
+  border-radius: 4px;
+  margin-bottom: 6px !important; /* REDUCED: Less margin */
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-size: 14px !important; /* REDUCED: Smaller text */
+}
+
+.recommendation-item strong {
+  font-size: 14px !important; /* REDUCED: Smaller titles */
+  display: block;
+  margin-bottom: 4px;
+}
+
+.recommendation-item div {
+  font-size: 12px !important; /* REDUCED: Smaller description text */
+  line-height: 1.3;
+}
+
+/* 3. FIX MAIN CONTENT OPACITY - Reduce background blur/opacity */
+.march-madness-container {
+  display: flex;
+  width: 100%;
+  max-width: 1200px;
+  background-color: rgba(255, 255, 255, 0.85) !important; /* INCREASED: Less transparent, more readable */
+  border-radius: 8px;
+  box-shadow: var(--shadow-medium);
+  overflow: hidden;
+  height: calc(100vh - 180px);
+  transition: background-color 0.3s ease;
+  backdrop-filter: blur(5px) !important; /* REDUCED: Less blur for better readability */
+}
+
+/* Dark theme override for better readability */
+[data-theme="dark"] .march-madness-container {
+  background-color: rgba(30, 30, 30, 0.85) !important; /* INCREASED: Less transparent in dark mode */
+}
+
+/* 4. FIX SPECIFIC INSIGHT CARD SIZING - Match homepage feature cards */
+.dashboard-page .recommendation-item {
+  min-height: auto !important; /* Remove fixed height */
+  max-width: none !important;
+  display: block !important;
+}
+
+/* Make confidence badges smaller */
+.recommendation-item span[style*="background"] {
+  font-size: 10px !important;
+  padding: 2px 5px !important;
+  margin-left: 8px !important;
+}
+
+/* 5. FIX CONTENT READABILITY - Ensure text is visible */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--border-color);
+  background-color: rgba(255, 255, 255, 0.1) !important; /* REDUCED: Much less opacity */
+  backdrop-filter: blur(2px) !important; /* REDUCED: Minimal blur */
+}
+
+[data-theme="dark"] .main-content {
+  background-color: rgba(0, 0, 0, 0.1) !important; /* REDUCED: Much less opacity in dark mode */
+}
+
+/* 6. FIX SIDEBAR READABILITY */
+.sidebar {
+  width: 200px;
+  background-color: rgba(26, 26, 46, 0.95) !important; /* Keep sidebar readable */
+  color: var(--text-light);
+  padding: 15px 0;
+  transition: background-color 0.3s ease;
+}
+
+/* 7. ENSURE GAMES LIST IS READABLE */
+.games-list {
+  flex: 1;
+  overflow-y: auto;
+  background-color: rgba(255, 255, 255, 0.05) !important; /* Very subtle background */
+}
+
+.game-row {
+  display: flex;
+  padding: 15px;
+  border-bottom: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: background-color 0.2s;
+  color: var(--text-primary);
+  background-color: rgba(255, 255, 255, 0.02) !important; /* Very subtle background */
+}
+
+.game-row:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important; /* Subtle hover effect */
+}
+
+/* 8. FIX GAME DETAIL PANEL READABILITY */
+.game-detail {
+  width: 350px;
+  padding: 20px;
+  background-color: rgba(248, 249, 250, 0.9) !important; /* More opaque for readability */
+  overflow-y: auto;
+  transition: background-color 0.3s ease;
+  backdrop-filter: blur(3px) !important; /* Minimal blur */
+}
+
+[data-theme="dark"] .game-detail {
+  background-color: rgba(40, 40, 40, 0.9) !important; /* More opaque in dark mode */
+}
+
+/* 9. ADDITIONAL READABILITY IMPROVEMENTS */
+.header-row {
+  display: flex;
+  padding: 10px 15px;
+  font-weight: bold;
+  border-bottom: 1px solid var(--border-color);
+  background-color: rgba(248, 249, 250, 0.8) !important; /* More opaque header */
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .header-row {
+  background-color: rgba(40, 40, 40, 0.8) !important;
+}
+
+/* 10. FIX TAB READABILITY */
+.tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border-color);
+  background-color: rgba(255, 255, 255, 0.1) !important; /* Subtle background */
+}
+
+.tab {
+  padding: 15px 20px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s;
+  color: var(--text-primary);
+  border-bottom: 2px solid transparent;
+  background-color: rgba(255, 255, 255, 0.05) !important; /* Very subtle background */
+}
+
+.tab:hover {
+  background-color: rgba(255, 255, 255, 0.15) !important;
+  color: var(--text-primary);
+}
+
+.tab.active {
+  border-bottom-color: var(--accent-secondary);
+  color: var(--accent-secondary);
+  background-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* 11. RESPONSIVE FIXES */
+@media (max-width: 992px) {
+  .dashboard-page {
+    background-size: 60% !important; /* Slightly larger on mobile but still controlled */
+  }
+  
+  .recommendations-panel {
+    margin: 0 10px 15px;
+    padding: 10px !important;
+  }
+  
+  .recommendation-item {
+    padding: 6px !important;
+    font-size: 13px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-page {
+    background-size: 80% !important; /* Larger on small screens */
+  }
+}
 /* Smooth transitions for theme switching */
 * {
   transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
