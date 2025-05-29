@@ -32,7 +32,7 @@ const DashboardPage = () => {
 
   // SportsChatPlus Enhanced Analytics Features
   const [scPlusInsights, setScPlusInsights] = useState([]);
-  const [expertPredictions, setExpertPredictions] = useState([]);
+  //const [expertPredictions, setExpertPredictions] = useState([]);
   const [smartChatSuggestions, setSmartChatSuggestions] = useState([]);
   const [personalizedRecommendations, setPersonalizedRecommendations] = useState([]);
   const [userActivity, setUserActivity] = useState({
@@ -222,7 +222,7 @@ const DashboardPage = () => {
 
   // Smart Chat Suggestions based on user's style and context
   const generateSmartChatSuggestions = useCallback((gameContext, userStyle = 'casual') => {
-    const suggestions = [];
+    //const suggestions = [];
     
     if (gameContext) {
       const styleVariations = {
@@ -434,7 +434,7 @@ const DashboardPage = () => {
     } finally {
       setGamesLoading(false);
     }
-  }, [activeTab, userProfile, getMockGames, generateScPlusInsights, generatePersonalizedRecommendations]);
+  }, [activeTab, userProfile, getMockGames, generateScPlusInsights, generatePersonalizedRecommendations, fetchGames]);
 
   // Fetch games when active tab changes
   useEffect(() => {
