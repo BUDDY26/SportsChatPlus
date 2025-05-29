@@ -1,6 +1,6 @@
 // src/pages/HomePage.js
-// Fixed with proper theme support and opacity matching older design
-// ================================================================
+// Temporary fix - removed auto-redirect to dashboard
+// ==================================================
 
 import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -11,7 +11,7 @@ import "./style.css";
 const HomePage = () => {
   console.log("SportsChatPlus Homepage Loaded!");
   const navigate = useNavigate();
-  const { user, loading } = useAuth();
+  const { user, loading, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
   
   // Apply theme to document root
@@ -19,12 +19,12 @@ const HomePage = () => {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
   
-  // Redirect logged-in users to dashboard - but only after loading is complete
-  useEffect(() => {
-    if (!loading && user) {
-      navigate("/dashboard");
-    }
-  }, [user, loading, navigate]);
+  // COMMENTED OUT: Auto-redirect to dashboard (temporary)
+  // useEffect(() => {
+  //   if (!loading && user) {
+  //     navigate("/dashboard");
+  //   }
+  // }, [user, loading, navigate]);
 
   // Show loading state while auth is being determined
   if (loading) {
@@ -38,6 +38,14 @@ const HomePage = () => {
     );
   }
 
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
+  };
+
   return (
     <div className="home-page" data-theme={theme}>
       {/* Theme Toggle Button */}
@@ -50,6 +58,36 @@ const HomePage = () => {
       </button>
 
       <div className="content-box homepage-content">
+        {/* Show user status if logged in */}
+        {user && (
+          <div style={{
+            background: 'rgba(40, 167, 69, 0.1)',
+            border: '1px solid rgba(40, 167, 69, 0.3)',
+            borderRadius: '4px',
+            padding: '10px',
+            marginBottom: '20px',
+            textAlign: 'center'
+          }}>
+            <p style={{ margin: '0 0 5px 0', color: '#28a745', fontWeight: 'bold' }}>
+              ✅ Logged in as: {user.email}
+            </p>
+            <button 
+              onClick={handleLogout}
+              style={{
+                background: '#dc3545',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                padding: '5px 10px',
+                fontSize: '12px',
+                cursor: 'pointer'
+              }}
+            >
+              Logout
+            </button>
+          </div>
+        )}
+
         {/* Clean Main Branding */}
         <div className="main-branding">
           <h1 className="main-title">SportsChat+</h1>
@@ -88,19 +126,29 @@ const HomePage = () => {
           </p>
         </div>
 
-        {/* Action Buttons */}
+        {/* Action Buttons - conditional based on login status */}
         <div className="action-buttons">
-          <Link to="/login" className="button-link">
-            <button className="primary-button cta-button">
-              Get Started - Login
-            </button>
-          </Link>
-          
-          <Link to="/signup" className="button-link">
-            <button className="secondary-button signup-button">
-              New Here? Sign Up Free
-            </button>
-          </Link>
+          {user ? (
+            <Link to="/dashboard" className="button-link">
+              <button className="primary-button cta-button">
+                Go to Dashboard
+              </button>
+            </Link>
+          ) : (
+            <>
+              <Link to="/login" className="button-link">
+                <button className="primary-button cta-button">
+                  Get Started - Login
+                </button>
+              </Link>
+              
+              <Link to="/signup" className="button-link">
+                <button className="secondary-button signup-button">
+                  New Here? Sign Up Free
+                </button>
+              </Link>
+            </>
+          )}
         </div>
 
         {/* Simple Stats */}
@@ -121,7 +169,9 @@ const HomePage = () => {
 
         {/* Footer Links */}
         <div className="link-row">
-          Already have an account? <Link to="/login">Login here</Link>
+          {!user && (
+            <>Already have an account? <Link to="/login">Login here</Link></>
+          )}
         </div>
         
         <div className="disclaimer">
