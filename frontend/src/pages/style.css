@@ -6,8 +6,8 @@
 :root {
   /* Light Theme (Default) */
   --bg-primary: #f0f0f0;
-  --bg-secondary: rgba(255, 255, 255, 0.5);
-  --bg-tertiary: rgba(248, 249, 250, 0.5);
+  --bg-secondary: rgba(255, 255, 255, 0.4);
+  --bg-tertiary: rgba(248, 249, 250, 0.4);
   --bg-sidebar: rgba(26, 26, 46, 0.9);
   --bg-header: rgba(26, 26, 46, 0.9);
   
@@ -32,8 +32,8 @@
 /* Dark Theme - FIXED */
 [data-theme="dark"] {
   --bg-primary: #1a1a1a;
-  --bg-secondary: rgba(30, 30, 30, 0.5);
-  --bg-tertiary: rgba(40, 40, 40, 0.5);
+  --bg-secondary: rgba(30, 30, 30, 0.4);
+  --bg-tertiary: rgba(40, 40, 40, 0.4);
   --bg-sidebar: rgba(15, 15, 25, 0.95);
   --bg-header: rgba(15, 15, 25, 0.95);
   
