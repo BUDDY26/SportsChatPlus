@@ -1511,7 +1511,7 @@ body {
   align-items: center;
   justify-content: flex-start;
   background-image: url('./Logo.png');
-  background-size: 800px 600px !important; /* FIXED: Specific size like login page */
+  background-size: cover !important; /* SAME AS LOGIN PAGE */
   background-position: center !important;
   background-repeat: no-repeat !important;
   background-color: var(--bg-primary);
@@ -1519,15 +1519,15 @@ body {
   transition: background-color 0.3s ease;
 }
 
-/* Alternative fix - if the above doesn't work exactly */
+/* Remove the specific pixel sizing - let it use 'cover' like other pages */
 @media (max-width: 1200px) {
   .dashboard-page {
-    background-size: 70% !important;
+    background-size: cover !important; /* Keep cover on all screen sizes */
   }
 }
 
 @media (max-width: 768px) {
   .dashboard-page {
-    background-size: 90% !important;
+    background-size: cover !important; /* Keep cover on all screen sizes */
   }
 }
