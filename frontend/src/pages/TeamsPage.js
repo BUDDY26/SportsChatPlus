@@ -272,10 +272,24 @@ const TeamsPage = () => {
     }
   }, [favoriteTeams, updateUserProfile, userProfile]);
 
-  // Handle team selection
+  // Fetch team details with smart enhancements - MOVED UP
+  const fetchTeamDetails = useCallback(async (teamId) => {
+    try {
+      // In a real implementation, this would fetch additional team details
+      const team = teams.find(t => t.id === teamId);
+      if (team) {
+        setSelectedTeam(team);
+      }
+    } catch (err) {
+      console.error("Error fetching team details:", err);
+      setError("Failed to load team details. Please try again.");
+    }
+  }, [teams]);
+
+  // Handle team selection - FIXED DEPENDENCY
   const handleTeamClick = useCallback((team) => {
     fetchTeamDetails(team.id);
-  }, []);
+  }, [fetchTeamDetails]);
 
   // Smart recommendation engine
   const generatePersonalizedRecommendations = useCallback(() => {
@@ -366,26 +380,12 @@ const TeamsPage = () => {
     }
   }, [getSmartMockTeams]);
 
-  // Fetch team details with smart enhancements
-  const fetchTeamDetails = useCallback(async (teamId) => {
-    try {
-      // In a real implementation, this would fetch additional team details
-      const team = teams.find(t => t.id === teamId);
-      if (team) {
-        setSelectedTeam(team);
-      }
-    } catch (err) {
-      console.error("Error fetching team details:", err);
-      setError("Failed to load team details. Please try again.");
-    }
-  }, [teams]);
-
   // Initial load
   useEffect(() => {
     fetchTeams();
   }, [fetchTeams]);
 
-  // Generate recommendations when data changes
+  // Generate recommendations when data changes - FIXED DEPENDENCY
   useEffect(() => {
     if (teams.length > 0) {
       generatePersonalizedRecommendations();
@@ -687,10 +687,6 @@ const TeamsPage = () => {
             <div className="team-info-section">
               <h4>📊 Team Information</h4>
               <div className="info-group">
-                <div className="info-item">
-                  <label>Conference:</label>
-                  <span>{selectedTeam.conference}</span>
-                </div>
                 <div className="info-item">
                   <label>Head Coach:</label>
                   <span>{selectedTeam.coach}</span>
