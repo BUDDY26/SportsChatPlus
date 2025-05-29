@@ -1496,38 +1496,103 @@ body {
     font-size: 10px;
   }
 }
-/* ADD THIS CSS OVERRIDE TO FIX DASHBOARD LOGO SIZE */
-/* Add this to the END of your current style.css file */
-
 /* ===================================== */
-/* DASHBOARD LOGO SIZE FIX */
+/* EXACT LOGIN TO DASHBOARD MATCH */
 /* ===================================== */
 
-/* Override dashboard background to match login page exactly */
-.dashboard-page {
+/* Ensure all pages use identical background setup */
+.home-page, .login-page, .sign-up, .dashboard-page {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
   background-image: url('./Logo.png');
-  background-size: cover !important; /* SAME AS LOGIN PAGE */
+  background-size: 800px 600px !important; /* Same fixed size */
   background-position: center !important;
   background-repeat: no-repeat !important;
-  background-color: var(--bg-primary);
+  background-color: var(--bg-primary) !important; /* Force same background color */
   padding: 20px;
   transition: background-color 0.3s ease;
 }
 
-/* Remove the specific pixel sizing - let it use 'cover' like other pages */
+/* Dashboard specific layout adjustment */
+.dashboard-page {
+  justify-content: flex-start !important; /* Dashboard starts from top */
+}
+
+/* Make dashboard containers match login content-box styling exactly */
+.dashboard-header {
+  background-color: var(--bg-secondary) !important; /* Same as login content-box */
+  border-radius: 8px;
+  box-shadow: var(--shadow-light);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  backdrop-filter: blur(10px) !important; /* Same blur as login */
+  border: 1px solid rgba(255, 255, 255, 0.2) !important; /* Same border as login */
+}
+
+.march-madness-container {
+  background-color: var(--bg-secondary) !important; /* Same as login content-box */
+  border-radius: 8px;
+  box-shadow: var(--shadow-light);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  backdrop-filter: blur(10px) !important; /* Same blur as login */
+  border: 1px solid rgba(255, 255, 255, 0.2) !important; /* Same border as login */
+}
+
+.ai-insights-container {
+  background-color: var(--bg-secondary) !important; /* Same as login content-box */
+  backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 8px;
+  box-shadow: var(--shadow-light);
+}
+
+.recommendations-container {
+  background-color: var(--bg-secondary) !important; /* Same as login content-box */
+  backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 8px;
+  box-shadow: var(--shadow-light);
+}
+
+.dashboard-footer {
+  background-color: var(--bg-secondary) !important; /* Same as login content-box */
+  backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 8px;
+  box-shadow: var(--shadow-light);
+}
+
+/* Make sure all cards use same styling as login */
+.ai-insight-card,
+.recommendation-card {
+  background-color: var(--bg-secondary) !important;
+  backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  box-shadow: var(--shadow-light);
+}
+
+/* Dark theme - match login page exactly */
+[data-theme="dark"] .dashboard-header,
+[data-theme="dark"] .march-madness-container,
+[data-theme="dark"] .ai-insights-container,
+[data-theme="dark"] .recommendations-container,
+[data-theme="dark"] .dashboard-footer,
+[data-theme="dark"] .ai-insight-card,
+[data-theme="dark"] .recommendation-card {
+  background-color: var(--bg-secondary) !important; /* Uses dark theme --bg-secondary */
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Responsive - same as other pages */
 @media (max-width: 1200px) {
-  .dashboard-page {
-    background-size: cover !important; /* Keep cover on all screen sizes */
+  .home-page, .login-page, .sign-up, .dashboard-page {
+    background-size: 70% !important;
   }
 }
 
 @media (max-width: 768px) {
-  .dashboard-page {
-    background-size: cover !important; /* Keep cover on all screen sizes */
+  .home-page, .login-page, .sign-up, .dashboard-page {
+    background-size: 90% !important;
   }
 }
