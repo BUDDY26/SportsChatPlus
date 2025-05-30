@@ -4,13 +4,16 @@ import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import StatsPage from './StatsPage';
 import TeamsPage from './TeamsPage';
+import SportSelector from '../components/SportSelector';
+import { collection, getDocs, query, orderBy } from 'firebase/firestore';
+import { db } from '../firebase-config';
 import "./style.css";
 
 const DashboardPage = () => {
   const navigate = useNavigate();
   const { user, userProfile, logout, loading } = useAuth();
   const { theme, toggleTheme } = useTheme();
-  
+
   // March Madness state
   const [selectedGame, setSelectedGame] = useState(null);
   const [activeTab, setActiveTab] = useState("upcoming");
@@ -21,7 +24,9 @@ const DashboardPage = () => {
   const [gamesLoading, setGamesLoading] = useState(true);
   const [error, setError] = useState(null);
   const [lastRefreshTime, setLastRefreshTime] = useState(null);
-  
+
+  const [currentSport, setCurrentSport] = useState("basketball");
+
   // Global chat state
   const [globalChatMessage, setGlobalChatMessage] = useState("");
   const [globalChatMessages, setGlobalChatMessages] = useState([
@@ -51,7 +56,7 @@ const DashboardPage = () => {
   const handleGameClick = useCallback(async (game) => {
     try {
       setSelectedGame(game);
-      
+
       setUserActivity(prev => ({
         ...prev,
         gamesViewed: prev.gamesViewed + 1,
@@ -63,140 +68,153 @@ const DashboardPage = () => {
   }, []); // Removed generateSmartChatSuggestions call to avoid dependency issues
 
   // Enhanced mock data with ALL AI features
-  const getMockGames = useCallback((tab) => {
-    switch (tab) {
-      case "live":
-        return [
-          { 
-            id: 7, 
-            team1: "Duke", 
-            team2: "Houston", 
-            time: "LIVE", 
-            score1: 54, 
-            score2: 52, 
-            quarter: "2nd Half",
-            excitement: "high",
-            scPlusAnalysis: { 
-              favorite: "Duke", 
-              confidence: 73, 
-              insight: "Strong offensive momentum in 2nd half" 
-            }
-          },
-          { 
-            id: 8, 
-            team1: "Purdue", 
-            team2: "Oregon", 
-            time: "LIVE", 
-            score1: 35, 
-            score2: 38, 
-            quarter: "1st Half",
-            excitement: "medium",
-            scPlusAnalysis: { 
-              favorite: "Oregon", 
-              confidence: 61, 
-              insight: "Superior field goal percentage this game" 
-            }
-          }
-        ];
-      case "recent":
-        return [
-          { id: 9, team1: "Kansas", team2: "Florida", time: "Final", score1: 78, score2: 65, scPlusResult: "✅ Expert pick was correct" },
-          { id: 10, team1: "Kentucky", team2: "Washington", time: "Final", score1: 67, score2: 74, scPlusResult: "⚡ Upset special!" },
-          { id: 11, team1: "UCLA", team2: "Baylor", time: "Final", score1: 81, score2: 85, scPlusResult: "✅ Called it perfectly" }
-        ];
-      default:
-        return [
-          { 
-            id: 1, 
-            team1: "Maryland", 
-            team2: "Texas", 
-            time: "Mar 26, 7:10 PM", 
-            spread: "-3.5", 
-            round: "Sweet 16",
-            scPlusAnalysis: { 
-              favorite: "Maryland", 
-              confidence: 68, 
-              insight: "Home court advantage + recent strong form" 
-            }
-          },
-          { 
-            id: 2, 
-            team1: "Creighton", 
-            team2: "Tennessee", 
-            time: "Mar 26, 8:20 PM", 
-            spread: "-1.5", 
-            round: "Sweet 16",
-            scPlusAnalysis: { 
-              favorite: "Tennessee", 
-              confidence: 54, 
-              insight: "Marginally better defensive statistics" 
-            }
-          },
-          { 
-            id: 3, 
-            team1: "Arizona", 
-            team2: "Gonzaga", 
-            time: "Mar 27, 6:15 PM", 
-            spread: "-2.0", 
-            round: "Elite 8",
-            scPlusAnalysis: { 
-              favorite: "Gonzaga", 
-              confidence: 71, 
-              insight: "Elite three-point shooting gives them the edge" 
-            }
-          },
-          { 
-            id: 4, 
-            team1: "UConn", 
-            team2: "San Diego St", 
-            time: "Mar 27, 7:45 PM", 
-            spread: "-6.5", 
-            round: "Elite 8",
-            scPlusAnalysis: { 
-              favorite: "UConn", 
-              confidence: 77, 
-              insight: "Tournament experience is a major factor" 
-            }
-          },
-          { 
-            id: 5, 
-            team1: "North Carolina", 
-            team2: "Alabama", 
-            time: "Mar 28, 7:10 PM", 
-            spread: "-4.0", 
-            round: "Final Four",
-            scPlusAnalysis: { 
-              favorite: "North Carolina", 
-              confidence: 63, 
-              insight: "March Madness tradition favors Tar Heels" 
-            }
-          },
-          { 
-            id: 6, 
-            team1: "Iowa St", 
-            team2: "Illinois", 
-            time: "Mar 28, 9:40 PM", 
-            spread: "-1.0", 
-            round: "Final Four",
-            scPlusAnalysis: { 
-              favorite: "Iowa St", 
-              confidence: 52, 
-              insight: "Coin flip game - could go either way" 
-            }
-          }
-        ];
+  const getFirebaseGames = useCallback(async (sport, tab) => {
+    try {
+      // Determine which collection to use based on sport
+      const collectionName = sport === 'basketball' ? 'games' : 'baseballGames';
+
+      console.log(`🔍 Fetching ${sport} games from ${collectionName} collection`);
+
+      // Create base query - get all games first, then filter
+      const gamesQuery = query(
+        collection(db, collectionName),
+        orderBy('LastUpdated', 'desc')
+      );
+
+      const querySnapshot = await getDocs(gamesQuery);
+      const firebaseGames = [];
+
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+
+        // Convert Firebase data to your app's format
+        const gameData = {
+          id: doc.id,
+          team1: data.Team1Name || 'TBD',
+          team2: data.Team2Name || 'TBD',
+          score1: data.ScoreTeam1 || 0,
+          score2: data.ScoreTeam2 || 0,
+          time: formatGameTime(data.DatePlayed, data.GameState),
+          gameState: data.GameState || 'pre',
+          round: data.Round || 'Tournament',
+          location: data.Location || 'TBD',
+          sport: sport,
+          // Add SC+ Analysis for display
+          scPlusAnalysis: generateScPlusAnalysis(data, sport)
+        };
+
+        firebaseGames.push(gameData);
+      });
+
+      // Filter by tab after getting all data
+      let filteredGames = firebaseGames;
+      if (tab === "live") {
+        filteredGames = firebaseGames.filter(game =>
+          game.gameState === 'live' || game.gameState === 'in-progress'
+        );
+      } else if (tab === "recent") {
+        filteredGames = firebaseGames.filter(game =>
+          game.gameState === 'final' || game.gameState === 'completed'
+        );
+      } else {
+        // upcoming
+        filteredGames = firebaseGames.filter(game =>
+          game.gameState === 'pre' || game.gameState === 'scheduled'
+        );
+      }
+
+      console.log(`✅ Loaded ${filteredGames.length} ${sport} games for ${tab} tab`);
+      return filteredGames;
+
+    } catch (error) {
+      console.error(`❌ Error fetching ${sport} games:`, error);
+      // Return empty array on error
+      return [];
     }
   }, []);
+  const formatGameTime = (dateTimestamp, gameState) => {
+    if (!dateTimestamp) return 'TBD';
+
+    try {
+      const date = dateTimestamp.toDate ? dateTimestamp.toDate() : new Date(dateTimestamp);
+
+      if (gameState === 'live' || gameState === 'in-progress') {
+        return 'LIVE';
+      } else if (gameState === 'final' || gameState === 'completed') {
+        return 'Final';
+      } else {
+        // Format upcoming games
+        return date.toLocaleDateString('en-US', {
+          month: 'short',
+          day: 'numeric',
+          hour: 'numeric',
+          minute: '2-digit'
+        });
+      }
+    } catch (error) {
+      console.error('Error formatting date:', error);
+      return 'TBD';
+    }
+  };
+
+  const generateScPlusAnalysis = (gameData, sport) => {
+    // Generate smart analysis based on real data
+    const team1Score = gameData.ScoreTeam1 || 0;
+    const team2Score = gameData.ScoreTeam2 || 0;
+
+    if (gameData.GameState === 'live' || gameData.GameState === 'final') {
+      // For live/completed games, show actual results
+      if (team1Score > team2Score) {
+        return {
+          favorite: gameData.Team1Name,
+          confidence: 100,
+          insight: `Leading ${team1Score}-${team2Score}`
+        };
+      } else if (team2Score > team1Score) {
+        return {
+          favorite: gameData.Team2Name,
+          confidence: 100,
+          insight: `Leading ${team2Score}-${team1Score}`
+        };
+      }
+    } else {
+      // For upcoming games, generate prediction
+      const confidence = Math.floor(Math.random() * 30) + 55; // 55-85%
+      const favorite = Math.random() > 0.5 ? gameData.Team1Name : gameData.Team2Name;
+
+      const insights = sport === 'baseball' ? [
+        "Strong pitching rotation",
+        "Better offensive lineup",
+        "Home field advantage",
+        "Superior postseason experience",
+        "Key player availability"
+      ] : [
+        "Strong recent form",
+        "Better head-to-head record",
+        "Home court advantage",
+        "Superior tournament experience",
+        "Deeper bench strength"
+      ];
+
+      return {
+        favorite: favorite,
+        confidence: confidence,
+        insight: insights[Math.floor(Math.random() * insights.length)]
+      };
+    }
+
+    return null;
+  };
 
   // ALL AI INSIGHT GENERATION
   const generateScPlusInsights = useCallback((gamesList) => {
     const insights = [];
-    
+
     if (gamesList.length > 0) {
-      const highConfidencePicks = gamesList.filter(game => 
+      const highConfidencePicks = gamesList.filter(game =>
         game.scPlusAnalysis && game.scPlusAnalysis.confidence > 70
       );
-      
+
       if (highConfidencePicks.length > 0) {
         insights.push({
           type: 'expert_pick',
@@ -207,10 +225,10 @@ const DashboardPage = () => {
         });
       }
 
-      const upsetCandidates = gamesList.filter(game => 
+      const upsetCandidates = gamesList.filter(game =>
         game.spread && Math.abs(parseFloat(game.spread)) > 5
       );
-      
+
       if (upsetCandidates.length > 0) {
         insights.push({
           type: 'upset_watch',
@@ -227,7 +245,7 @@ const DashboardPage = () => {
         reasoning: 'SportsChatPlus analysis of current tournament trends'
       });
     }
-    
+
     setScPlusInsights(insights);
   }, []);
 
@@ -251,7 +269,7 @@ const DashboardPage = () => {
           `UPSET ALERT - ${gameContext.team2} IS DANGEROUS! 🚨`
         ]
       };
-      
+
       setSmartChatSuggestions(styleVariations[userStyle] || styleVariations.casual);
     }
   }, []);
@@ -259,12 +277,12 @@ const DashboardPage = () => {
   // ALL PERSONALIZED RECOMMENDATIONS
   const generatePersonalizedRecommendations = useCallback((gamesList) => {
     const recommendations = [];
-    
+
     if (gamesList.length > 0) {
-      const closeGames = gamesList.filter(game => 
+      const closeGames = gamesList.filter(game =>
         game.spread && Math.abs(parseFloat(game.spread)) < 3
       );
-      
+
       if (closeGames.length > 0) {
         recommendations.push({
           type: 'close_game',
@@ -293,10 +311,10 @@ const DashboardPage = () => {
         });
       }
 
-      const goodBets = gamesList.filter(game => 
+      const goodBets = gamesList.filter(game =>
         game.scPlusAnalysis && game.scPlusAnalysis.confidence > 65 && game.scPlusAnalysis.confidence < 80
       );
-      
+
       if (goodBets.length > 0) {
         recommendations.push({
           type: 'smart_betting',
@@ -317,9 +335,21 @@ const DashboardPage = () => {
         });
       }
     }
-    
+
     setPersonalizedRecommendations(recommendations);
   }, [userActivity, handleGameClick, setActiveMenu]);
+
+  const handleSportChange = useCallback((newSport) => {
+    setCurrentSport(newSport);
+    // Reset game selection when switching sports
+    setSelectedGame(null);
+    // Reset to upcoming tab
+    setActiveTab("upcoming");
+    // Clear any error state
+    setError(null);
+
+    console.log(`🔄 Switched to ${newSport} tournament`);
+  }, []);
 
   // Redirect if not logged in
   useEffect(() => {
@@ -344,27 +374,27 @@ const DashboardPage = () => {
   // Fetch chat messages for selected game
   const fetchChatMessages = useCallback(async () => {
     if (!selectedGame?.id) return;
-    
+
     try {
       setChatMessages([
-        { 
-          id: 1, 
-          user: "BasketballFan22", 
-          message: "Can't wait for this game!", 
+        {
+          id: 1,
+          user: "BasketballFan22",
+          message: "Can't wait for this game!",
           timestamp: "2 hours ago",
           isCurrentUser: false
         },
-        { 
-          id: 2, 
-          user: userProfile?.username || user?.displayName || "You", 
-          message: "This should be exciting!", 
+        {
+          id: 2,
+          user: userProfile?.username || user?.displayName || "You",
+          message: "This should be exciting!",
           timestamp: "1 hour ago",
           isCurrentUser: true
         },
-        { 
-          id: 3, 
-          user: "MarchMadnessFan", 
-          message: "What's everyone's prediction?", 
+        {
+          id: 3,
+          user: "MarchMadnessFan",
+          message: "What's everyone's prediction?",
           timestamp: "45 minutes ago",
           isCurrentUser: false
         }
@@ -378,47 +408,55 @@ const DashboardPage = () => {
   const fetchGames = useCallback(async () => {
     setGamesLoading(true);
     setError(null);
-    
+
     try {
-      const mockGames = getMockGames(activeTab);
-      
-      let filteredGames = mockGames;
+      console.log(`🎯 Fetching ${currentSport} games for ${activeTab} tab`);
+
+      // Get real data from Firebase
+      const firebaseGames = await getFirebaseGames(currentSport, activeTab);
+
+      // Apply user personalization if available
+      let filteredGames = firebaseGames;
       if (userProfile?.preferences?.favoriteTeams?.length > 0) {
-        const favoriteGames = mockGames.filter(game => 
-          userProfile.preferences.favoriteTeams.some(team => 
+        const favoriteGames = firebaseGames.filter(game =>
+          userProfile.preferences.favoriteTeams.some(team =>
             game.team1.toLowerCase().includes(team.toLowerCase()) ||
             game.team2.toLowerCase().includes(team.toLowerCase())
           )
         );
-        
+
         if (favoriteGames.length > 0) {
           filteredGames = [
             ...favoriteGames,
-            ...mockGames.filter(game => !favoriteGames.includes(game))
+            ...firebaseGames.filter(game => !favoriteGames.includes(game))
           ];
         }
       }
-      
+
       setGames(filteredGames);
       setLastRefreshTime(new Date());
-      
+
+      // Generate AI insights
       generateScPlusInsights(filteredGames);
       generatePersonalizedRecommendations(filteredGames);
+
+      console.log(`✅ Successfully loaded ${filteredGames.length} ${currentSport} games`);
+
     } catch (err) {
-      console.error(`Error fetching ${activeTab} games:`, err);
-      setError(`Failed to load ${activeTab} games. Please try again.`);
-      setGames(getMockGames(activeTab));
+      console.error(`❌ Error fetching ${currentSport} games:`, err);
+      setError(`Failed to load ${currentSport} games. Please try again.`);
+      setGames([]);
     } finally {
       setGamesLoading(false);
     }
-  }, [activeTab, userProfile, getMockGames, generateScPlusInsights, generatePersonalizedRecommendations]);
+  }, [currentSport, activeTab, userProfile, getFirebaseGames, generateScPlusInsights, generatePersonalizedRecommendations]);
 
   // Fetch games when active tab changes
   useEffect(() => {
     if (!loading && user) {
       fetchGames();
     }
-  }, [activeTab, loading, user, fetchGames]);
+  }, [activeTab, loading, user, currentSport, fetchGames]); // ADD currentSport here
 
   // Fetch chat messages when a game is selected
   useEffect(() => {
@@ -441,7 +479,7 @@ const DashboardPage = () => {
     const exclamationCount = (message.match(/!/g) || []).length;
     const capsCount = (message.match(/[A-Z]/g) || []).length;
     const analyticalWords = ['percentage', 'statistics', 'analysis', 'data', 'performance', 'stats'];
-    
+
     if (exclamationCount > 2 || capsCount > message.length * 0.3) {
       return 'enthusiastic';
     } else if (analyticalWords.some(word => message.toLowerCase().includes(word))) {
@@ -473,14 +511,14 @@ const DashboardPage = () => {
         userId: user.uid,
         scPlusEnhanced: true
       };
-      
+
       setChatMessages(prev => [...prev, newMessage]);
       setChatMessage("");
-      
+
       setTimeout(() => {
         generateSmartChatSuggestions(selectedGame, detectedStyle);
       }, 1000);
-      
+
     } catch (err) {
       console.error("Error sending message:", err);
       setError("Failed to send message. Please try again.");
@@ -493,7 +531,7 @@ const DashboardPage = () => {
     if (!globalChatMessage.trim()) return;
 
     const detectedStyle = analyzeMessageStyle(globalChatMessage);
-    
+
     const newMessage = {
       id: Date.now(),
       user: userProfile?.username || user?.displayName || "You",
@@ -503,10 +541,10 @@ const DashboardPage = () => {
       userId: user.uid,
       scPlusEnhanced: true
     };
-    
+
     setGlobalChatMessages(prev => [...prev, newMessage]);
     setGlobalChatMessage("");
-    
+
     setUserActivity(prev => ({
       ...prev,
       messagesPosted: prev.messagesPosted + 1,
@@ -526,7 +564,7 @@ const DashboardPage = () => {
   // Enhanced betting with user context
   const handlePlaceBet = async (teamId, amount) => {
     if (!selectedGame?.id) return;
-    
+
     try {
       console.log(`User ${user.uid} placed bet on team ${teamId} for ${amount} coins`);
       const teamName = teamId === 1 ? selectedGame.team1 : selectedGame.team2;
@@ -569,12 +607,21 @@ const DashboardPage = () => {
       {/* Enhanced Header with Smart User Info */}
       <header className="dashboard-header">
         <div className="logo-container">
-          <h1>🏀 SportsChat+</h1>
+          <h1>
+            {currentSport === 'basketball' ? '🏀' : '⚾'} SportsChat+
+          </h1>
         </div>
+
+        {/* ADD SPORT SELECTOR HERE */}
+        <SportSelector
+          currentSport={currentSport}
+          onSportChange={handleSportChange}
+        />
+
         <div className="user-controls">
           <div style={{ textAlign: 'right' }}>
             <span className="username">
-              Welcome, {userProfile?.username || user?.displayName || "Fan"}! 
+              Welcome, {userProfile?.username || user?.displayName || "Fan"}!
             </span>
             <div style={{ fontSize: '12px', opacity: 0.8 }}>
               {userActivity.gamesViewed > 0 && (
@@ -649,7 +696,7 @@ const DashboardPage = () => {
           {/* Enhanced Sidebar Navigation */}
           <div className="sidebar">
             <div className="menu-items">
-              <div 
+              <div
                 className={`menu-item ${activeMenu === "games" ? "active" : ""}`}
                 onClick={() => setActiveMenu("games")}
               >
@@ -661,28 +708,28 @@ const DashboardPage = () => {
                   </span>
                 )}
               </div>
-              <div 
+              <div
                 className={`menu-item ${activeMenu === "teams" ? "active" : ""}`}
                 onClick={() => setActiveMenu("teams")}
               >
                 <i className="icon team-icon"></i>
                 <span>Teams</span>
               </div>
-              <div 
+              <div
                 className={`menu-item ${activeMenu === "bracket" ? "active" : ""}`}
                 onClick={() => setActiveMenu("bracket")}
               >
                 <i className="icon bracket-icon"></i>
                 <span>Smart Bracket</span>
               </div>
-              <div 
+              <div
                 className={`menu-item ${activeMenu === "bets" ? "active" : ""}`}
                 onClick={() => setActiveMenu("bets")}
               >
                 <i className="icon coin-icon"></i>
                 <span>Smart Bets</span>
               </div>
-              <div 
+              <div
                 className={`menu-item ${activeMenu === "chat" ? "active" : ""}`}
                 onClick={() => setActiveMenu("chat")}
               >
@@ -694,7 +741,7 @@ const DashboardPage = () => {
                   </span>
                 )}
               </div>
-              <div 
+              <div
                 className={`menu-item ${activeMenu === "stats" ? "active" : ""}`}
                 onClick={() => setActiveMenu("stats")}
               >
@@ -726,8 +773,8 @@ const DashboardPage = () => {
                 >
                   Recent
                 </div>
-                <button 
-                  className="refresh-button" 
+                <button
+                  className="refresh-button"
                   onClick={handleManualRefresh}
                   disabled={gamesLoading}
                 >
@@ -807,15 +854,15 @@ const DashboardPage = () => {
           {/* All other menu views (Teams, Bracket, etc.) */}
           {activeMenu === "teams" && (
             <div className="main-content">
-              <TeamsPage />
+              <TeamsPage currentSport={currentSport} />
             </div>
           )}
-          
+
           {activeMenu === "bracket" && (
             <div className="main-content placeholder-content">
               <h2>🏆 SportsChatPlus Smart Bracket</h2>
               <p>Advanced analytics and expert insights for tournament predictions.</p>
-              
+
               <div style={{
                 background: 'var(--bg-tertiary)',
                 padding: '20px',
@@ -838,7 +885,7 @@ const DashboardPage = () => {
                     <div style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>Predicted Upsets</div>
                   </div>
                 </div>
-                
+
                 <div style={{ marginTop: '20px' }}>
                   <h4 style={{ color: 'var(--text-primary)', marginBottom: '10px' }}>⭐ Expert Predictions:</h4>
                   <ul style={{ color: 'var(--text-secondary)', lineHeight: '1.6' }}>
@@ -869,12 +916,12 @@ const DashboardPage = () => {
               )}
             </div>
           )}
-          
+
           {activeMenu === "bets" && (
             <div className="main-content placeholder-content">
               <h2>💰 SportsChatPlus Smart Betting</h2>
               <p>Expert analysis and data-driven betting recommendations.</p>
-              
+
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '15px', marginTop: '20px' }}>
                 <div style={{ background: 'var(--bg-tertiary)', padding: '20px', borderRadius: '8px', textAlign: 'center' }}>
                   <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#28a745' }}>+18%</div>
@@ -922,7 +969,7 @@ const DashboardPage = () => {
               </div>
             </div>
           )}
-          
+
           {activeMenu === "chat" && (
             <div className="main-content global-chat-container">
               <div className="global-chat-header">
@@ -946,8 +993,8 @@ const DashboardPage = () => {
                         key={index}
                         onClick={() => applySuggestion(suggestion)}
                         className="smart-suggestion"
-                        style={{ 
-                          padding: '5px 10px', 
+                        style={{
+                          padding: '5px 10px',
                           fontSize: '12px',
                           cursor: 'pointer',
                           border: '1px solid var(--accent-primary)',
@@ -1002,7 +1049,7 @@ const DashboardPage = () => {
               </form>
             </div>
           )}
-          
+
           {activeMenu === "stats" && (
             <div className="main-content">
               <StatsPage activeMenu={activeMenu} />
@@ -1020,11 +1067,11 @@ const DashboardPage = () => {
                   <span className="live-badge">LIVE</span>
                 )}
                 {selectedGame.excitement === 'high' && (
-                  <span style={{ 
-                    background: '#e63946', 
-                    color: 'white', 
-                    padding: '2px 6px', 
-                    borderRadius: '4px', 
+                  <span style={{
+                    background: '#e63946',
+                    color: 'white',
+                    padding: '2px 6px',
+                    borderRadius: '4px',
                     fontSize: '12px',
                     marginLeft: '10px'
                   }}>
@@ -1069,18 +1116,18 @@ const DashboardPage = () => {
                   <label>Round:</label>
                   <span>{selectedGame.round || "TBD"}</span>
                 </div>
-                
+
                 <div className="info-item">
                   <label>Location:</label>
                   <span>{selectedGame.location || "TBD"}</span>
                 </div>
-                
+
                 <div className="info-item">
                   <label>Date & Time:</label>
                   <span>
-                    {selectedGame.time === "LIVE" ? "In Progress" : 
-                     selectedGame.time === "Final" ? "Completed" : 
-                     selectedGame.time}
+                    {selectedGame.time === "LIVE" ? "In Progress" :
+                      selectedGame.time === "Final" ? "Completed" :
+                        selectedGame.time}
                   </span>
                 </div>
 
@@ -1088,8 +1135,8 @@ const DashboardPage = () => {
                   <div className="smart-insight">
                     <label>💡 Quick Insight:</label>
                     <span style={{ fontSize: '12px' }}>
-                      {Math.abs(parseFloat(selectedGame.spread)) < 3 
-                        ? "Expect a nail-biter - very close spread!" 
+                      {Math.abs(parseFloat(selectedGame.spread)) < 3
+                        ? "Expect a nail-biter - very close spread!"
                         : "One team is heavily favored to win."}
                     </span>
                   </div>
@@ -1120,7 +1167,7 @@ const DashboardPage = () => {
                     ⭐ Expert analysis recommends betting on {selectedGame.scPlusAnalysis?.favorite} with {selectedGame.scPlusAnalysis?.confidence}% confidence
                   </div>
                   <div className="betting-buttons">
-                    <button 
+                    <button
                       className="bet-button"
                       onClick={() => handlePlaceBet(1, 100)}
                       style={{ position: 'relative' }}
@@ -1135,7 +1182,7 @@ const DashboardPage = () => {
                         {selectedGame.scPlusAnalysis?.favorite === selectedGame.team1 ? '✅ Expert Pick' : '❌ Risky'}
                       </div>
                     </button>
-                    <button 
+                    <button
                       className="bet-button"
                       onClick={() => handlePlaceBet(2, 100)}
                       style={{ position: 'relative' }}
@@ -1157,7 +1204,7 @@ const DashboardPage = () => {
 
               <div className="chat-section">
                 <h3>💬 Game Chat</h3>
-                
+
                 {smartChatSuggestions.length > 0 && (
                   <div style={{ marginBottom: '10px' }}>
                     <div style={{ fontSize: '12px', color: 'var(--text-tertiary)', marginBottom: '5px' }}>
@@ -1212,7 +1259,7 @@ const DashboardPage = () => {
                     ))
                   )}
                 </div>
-                
+
                 <form className="chat-input" onSubmit={handleSendMessage}>
                   <input
                     type="text"

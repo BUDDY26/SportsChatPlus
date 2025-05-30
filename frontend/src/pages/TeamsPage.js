@@ -1,16 +1,18 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useAuth } from '../contexts/AuthContext';
+import { collection, getDocs, query, orderBy } from 'firebase/firestore';
+import { db } from '../firebase-config';
 import "./style.css";
 
-const TeamsPage = () => {
+const TeamsPage = ({ currentSport = 'basketball' }) => {
   const { user, userProfile, updateUserProfile } = useAuth();
-  
+
   const [teams, setTeams] = useState([]);
   const [selectedTeam, setSelectedTeam] = useState(null);
   const [teamsLoading, setTeamsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [lastRefreshTime, setLastRefreshTime] = useState(null);
-  
+
   // Smart features state
   const [searchQuery, setSearchQuery] = useState("");
   const [conferenceFilter, setConferenceFilter] = useState("all");
@@ -19,185 +21,131 @@ const TeamsPage = () => {
   const [teamInsights, setTeamInsights] = useState({});
   const [personalizedRecommendations, setPersonalizedRecommendations] = useState([]);
 
-  // Smart mock data with comprehensive team information
-  const getSmartMockTeams = useCallback(() => {
-    return [
-      {
-        id: 1,
-        name: "Duke Blue Devils",
-        shortName: "Duke",
-        conference: "ACC",
-        seed: 1,
-        coach: "Jon Scheyer",
-        wins: 28,
-        losses: 4,
-        winPct: 0.875,
-        ranking: 1,
-        location: "Durham, NC",
-        founded: 1838,
-        colors: ["Duke Blue", "White"],
-        mascot: "Blue Devil",
-        arena: "Cameron Indoor Stadium",
-        capacity: 9314,
-        players: [
-          { id: 1, name: "Tyler Johnson", position: "PG", year: "Junior", ppg: 24.8, rpg: 6.2, apg: 8.1 },
-          { id: 2, name: "Marcus Thompson", position: "SF", year: "Senior", ppg: 18.9, rpg: 7.4, apg: 3.2 },
-          { id: 3, name: "David Wilson", position: "C", year: "Sophomore", ppg: 16.2, rpg: 9.8, apg: 1.9 }
-        ],
-        recentGames: [
-          { id: 1, opponent: "North Carolina", result: "W", score: "94-91", date: "2025-03-15" },
-          { id: 2, opponent: "Virginia", result: "W", score: "78-65", date: "2025-03-12" }
-        ],
-        strengths: ["Offensive firepower", "Experienced coaching", "Strong home court advantage"],
-        weaknesses: ["Defensive consistency", "Depth concerns"]
-      },
-      {
-        id: 2,
-        name: "North Carolina Tar Heels",
-        shortName: "UNC",
-        conference: "ACC",
-        seed: 2,
-        coach: "Hubert Davis",
-        wins: 26,
-        losses: 6,
-        winPct: 0.812,
-        ranking: 3,
-        location: "Chapel Hill, NC",
-        founded: 1789,
-        colors: ["Carolina Blue", "White"],
-        mascot: "Rameses",
-        arena: "Dean Smith Center",
-        capacity: 21750,
-        players: [
-          { id: 4, name: "Marcus Williams", position: "PF", year: "Senior", ppg: 22.3, rpg: 11.5, apg: 3.4 },
-          { id: 5, name: "Alex Davis", position: "SG", year: "Junior", ppg: 19.1, rpg: 4.6, apg: 5.8 },
-          { id: 6, name: "Ryan Mitchell", position: "C", year: "Freshman", ppg: 12.7, rpg: 8.2, apg: 1.3 }
-        ],
-        recentGames: [
-          { id: 3, opponent: "Duke", result: "L", score: "91-94", date: "2025-03-15" },
-          { id: 4, opponent: "NC State", result: "W", score: "85-72", date: "2025-03-10" }
-        ],
-        strengths: ["Rebounding dominance", "Fast break offense", "Veteran leadership"],
-        weaknesses: ["Three-point shooting", "Turnovers"]
-      },
-      {
-        id: 3,
-        name: "Gonzaga Bulldogs",
-        shortName: "Gonzaga",
-        conference: "WCC",
-        seed: 1,
-        coach: "Mark Few",
-        wins: 29,
-        losses: 3,
-        winPct: 0.906,
-        ranking: 2,
-        location: "Spokane, WA",
-        founded: 1887,
-        colors: ["Navy Blue", "Silver"],
-        mascot: "Spike the Bulldog",
-        arena: "McCarthey Athletic Center",
-        capacity: 6000,
-        players: [
-          { id: 7, name: "Ryan Martinez", position: "SF", year: "Senior", ppg: 19.6, rpg: 9.4, apg: 4.2 },
-          { id: 8, name: "Jake Peterson", position: "PG", year: "Junior", ppg: 17.8, rpg: 3.9, apg: 9.1 },
-          { id: 9, name: "Connor Brown", position: "C", year: "Sophomore", ppg: 15.4, rpg: 10.6, apg: 2.1 }
-        ],
-        recentGames: [
-          { id: 5, opponent: "Saint Mary's", result: "W", score: "88-76", date: "2025-03-14" },
-          { id: 6, opponent: "BYU", result: "W", score: "92-68", date: "2025-03-11" }
-        ],
-        strengths: ["Balanced scoring", "Team chemistry", "Coaching excellence"],
-        weaknesses: ["Lack of marquee wins", "Conference strength"]
-      },
-      {
-        id: 4,
-        name: "Kansas Jayhawks",
-        shortName: "Kansas",
-        conference: "Big 12",
-        seed: 1,
-        coach: "Bill Self",
-        wins: 27,
-        losses: 5,
-        winPct: 0.844,
-        ranking: 4,
-        location: "Lawrence, KS",
-        founded: 1865,
-        colors: ["Crimson", "Blue"],
-        mascot: "Big Jay",
-        arena: "Allen Fieldhouse",
-        capacity: 16300,
-        players: [
-          { id: 10, name: "Jordan Davis", position: "PG", year: "Senior", ppg: 21.9, rpg: 4.3, apg: 7.8 },
-          { id: 11, name: "Michael Johnson", position: "PF", year: "Junior", ppg: 18.2, rpg: 8.7, apg: 2.9 },
-          { id: 12, name: "Chris Wilson", position: "C", year: "Sophomore", ppg: 14.6, rpg: 9.3, apg: 1.6 }
-        ],
-        recentGames: [
-          { id: 7, opponent: "Texas", result: "W", score: "81-75", date: "2025-03-13" },
-          { id: 8, opponent: "Baylor", result: "L", score: "72-76", date: "2025-03-09" }
-        ],
-        strengths: ["Tournament experience", "Depth", "Allen Fieldhouse advantage"],
-        weaknesses: ["Inconsistent shooting", "Youth at key positions"]
-      },
-      {
-        id: 5,
-        name: "Kentucky Wildcats",
-        shortName: "Kentucky",
-        conference: "SEC",
-        seed: 3,
-        coach: "John Calipari",
-        wins: 24,
-        losses: 8,
-        winPct: 0.750,
-        ranking: 6,
-        location: "Lexington, KY",
-        founded: 1865,
-        colors: ["Blue", "White"],
-        mascot: "Wildcat",
-        arena: "Rupp Arena",
-        capacity: 23500,
-        players: [
-          { id: 13, name: "Antonio Reed", position: "SG", year: "Freshman", ppg: 20.1, rpg: 5.2, apg: 4.7 },
-          { id: 14, name: "Tyler Washington", position: "PF", year: "Sophomore", ppg: 16.8, rpg: 8.9, apg: 2.3 },
-          { id: 15, name: "Malik Jackson", position: "C", year: "Freshman", ppg: 13.9, rpg: 7.6, apg: 1.1 }
-        ],
-        recentGames: [
-          { id: 9, opponent: "Tennessee", result: "W", score: "79-74", date: "2025-03-12" },
-          { id: 10, opponent: "Auburn", result: "L", score: "68-73", date: "2025-03-08" }
-        ],
-        strengths: ["Recruiting talent", "Athletic ability", "Big Blue Nation support"],
-        weaknesses: ["Team chemistry", "Experience", "Consistency"]
-      },
-      {
-        id: 6,
-        name: "Arizona Wildcats",
-        shortName: "Arizona",
-        conference: "Pac-12",
-        seed: 2,
-        coach: "Tommy Lloyd",
-        wins: 25,
-        losses: 7,
-        winPct: 0.781,
-        ranking: 5,
-        location: "Tucson, AZ",
-        founded: 1885,
-        colors: ["Cardinal Red", "Navy Blue"],
-        mascot: "Wilbur & Wilma Wildcat",
-        arena: "McKale Center",
-        capacity: 14644,
-        players: [
-          { id: 16, name: "Chris Anderson", position: "PG", year: "Junior", ppg: 20.1, rpg: 5.1, apg: 6.9 },
-          { id: 17, name: "Isaiah Thompson", position: "SF", year: "Senior", ppg: 17.4, rpg: 6.8, apg: 3.5 },
-          { id: 18, name: "Darius Williams", position: "C", year: "Junior", ppg: 15.2, rpg: 9.1, apg: 1.8 }
-        ],
-        recentGames: [
-          { id: 11, opponent: "UCLA", result: "W", score: "84-76", date: "2025-03-14" },
-          { id: 12, opponent: "Oregon", result: "W", score: "77-69", date: "2025-03-11" }
-        ],
-        strengths: ["Balanced attack", "Defensive intensity", "Pac-12 dominance"],
-        weaknesses: ["Road performance", "Free throw shooting"]
-      }
-    ];
+  // Smart data with comprehensive team information
+  const getFirebaseTeams = useCallback(async (sport) => {
+    try {
+      // Determine which collection to use based on sport
+      const collectionName = sport === 'basketball' ? 'teams' : 'baseballTeams';
+
+      console.log(`🔍 Fetching ${sport} teams from ${collectionName} collection`);
+
+      const teamsQuery = query(
+        collection(db, collectionName),
+        orderBy('LastUpdated', 'desc')
+      );
+
+      const querySnapshot = await getDocs(teamsQuery);
+      const firebaseTeams = [];
+
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+
+        // Convert Firebase data to your app's format
+        const teamData = {
+          id: doc.id,
+          name: data.TeamName || 'Unknown Team',
+          shortName: extractShortName(data.TeamName),
+          conference: data.Conference || data.region || 'NCAA Division I', // Better fallback
+          seed: data.Seed || null,
+          coach: data.CoachName || 'Head Coach TBD', // Better fallback
+          wins: data.Wins || 0,
+          losses: data.Losses || 0,
+          winPct: data.Wins ? (data.Wins / (data.Wins + data.Losses)) : 0,
+          ranking: data.Seed || Math.floor(Math.random() * 30) + 1, // Random ranking if no seed
+          location: extractLocation(data.TeamName),
+          sport: sport,
+          // Better defaults
+          founded: 1900,
+          colors: sport === 'baseball' ? ['School Colors'] : ['Team Colors'],
+          mascot: extractMascot(data.TeamName),
+          arena: sport === 'baseball' ? 'Baseball Diamond' : 'Basketball Arena',
+          capacity: sport === 'baseball' ? 3000 : 8000,
+          players: [],
+          recentGames: [],
+          strengths: generateStrengths(sport),
+          weaknesses: generateWeaknesses(sport)
+        };
+
+        firebaseTeams.push(teamData);
+      });
+
+      console.log(`✅ Loaded ${firebaseTeams.length} ${sport} teams`);
+      return firebaseTeams;
+
+    } catch (error) {
+      console.error(`❌ Error fetching ${sport} teams:`, error);
+      return [];
+    }
   }, []);
+
+  // ADD HELPER FUNCTIONS
+  const extractShortName = (fullName) => {
+    if (!fullName) return 'Team';
+
+    // Extract university name from full name
+    const parts = fullName.split(' ');
+    if (parts.length >= 2) {
+      // Look for common university keywords
+      const universityIndex = parts.findIndex(part =>
+        ['University', 'College', 'State'].includes(part)
+      );
+
+      if (universityIndex > 0) {
+        return parts.slice(0, universityIndex + 1).join(' ');
+      }
+    }
+
+    // Fallback: take first 2-3 words
+    return parts.slice(0, Math.min(3, parts.length)).join(' ');
+  };
+
+  const extractLocation = (teamName) => {
+    if (!teamName) return 'Unknown Location';
+
+    // Simple extraction - you can enhance this
+    const locationKeywords = ['University', 'College', 'State'];
+    const parts = teamName.split(' ');
+
+    for (let i = 0; i < parts.length; i++) {
+      if (locationKeywords.includes(parts[i]) && i > 0) {
+        return parts.slice(0, i).join(' ');
+      }
+    }
+
+    return parts[0] || 'Unknown Location';
+  };
+
+  const extractMascot = (teamName) => {
+    if (!teamName) return 'Team';
+
+    // Extract potential mascot from team name
+    const parts = teamName.split(' ');
+    const mascotWords = ['Wildcats', 'Eagles', 'Bears', 'Tigers', 'Bulldogs', 'Cardinals'];
+
+    for (const part of parts) {
+      if (mascotWords.some(mascot => part.toLowerCase().includes(mascot.toLowerCase()))) {
+        return part;
+      }
+    }
+
+    return 'Team';
+  };
+
+  const generateStrengths = (sport) => {
+    if (sport === 'baseball') {
+      return ['Strong pitching staff', 'Experienced hitters', 'Good team chemistry'];
+    } else {
+      return ['Offensive firepower', 'Experienced coaching', 'Strong home court advantage'];
+    }
+  };
+
+  const generateWeaknesses = (sport) => {
+    if (sport === 'baseball') {
+      return ['Inconsistent batting', 'Young pitching rotation'];
+    } else {
+      return ['Defensive consistency', 'Depth concerns'];
+    }
+  };
 
   // Initialize favorite teams from user profile
   useEffect(() => {
@@ -254,9 +202,9 @@ const TeamsPage = () => {
       } else {
         newFavorites = [...favoriteTeams, teamName];
       }
-      
+
       setFavoriteTeams(newFavorites);
-      
+
       // Update user profile in Firebase
       if (updateUserProfile) {
         await updateUserProfile({
@@ -294,7 +242,7 @@ const TeamsPage = () => {
   // Smart recommendation engine
   const generatePersonalizedRecommendations = useCallback(() => {
     const recommendations = [];
-    
+
     if (favoriteTeams.length === 0) {
       recommendations.push({
         type: 'get_started',
@@ -318,10 +266,10 @@ const TeamsPage = () => {
 
     // Recommend teams based on current selection
     if (selectedTeam) {
-      const sameConferenceTeams = teams.filter(t => 
+      const sameConferenceTeams = teams.filter(t =>
         t.conference === selectedTeam.conference && t.id !== selectedTeam.id
       );
-      
+
       if (sameConferenceTeams.length > 0) {
         const rivalTeam = sameConferenceTeams[0];
         recommendations.push({
@@ -351,39 +299,37 @@ const TeamsPage = () => {
   const fetchTeams = useCallback(async () => {
     setTeamsLoading(true);
     setError(null);
-    
+
     try {
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      const mockTeams = getSmartMockTeams();
-      setTeams(mockTeams);
+      console.log(`🎯 Fetching ${currentSport} teams`);
+
+      const firebaseTeams = await getFirebaseTeams(currentSport);
+      setTeams(firebaseTeams);
       setLastRefreshTime(new Date());
-      
+
       // Generate team insights
       const insights = {};
-      mockTeams.forEach(team => {
+      firebaseTeams.forEach(team => {
         insights[team.id] = {
           momentum: team.winPct > 0.8 ? 'High' : team.winPct > 0.6 ? 'Medium' : 'Low',
           upsetPotential: team.seed > 8 && team.winPct > 0.75 ? 'High' : 'Low',
-          keyPlayer: team.players.reduce((prev, current) => (prev.ppg > current.ppg) ? prev : current),
-          strengthScore: Math.round((team.winPct * 0.4 + (1 - team.seed / 16) * 0.3 + (team.ranking <= 10 ? 1 : 0.5) * 0.3) * 100)
+          strengthScore: Math.round((team.winPct * 0.4 + (team.seed ? (1 - team.seed / 16) : 0.5) * 0.3 + 0.3) * 100)
         };
       });
       setTeamInsights(insights);
-      
+
     } catch (err) {
-      console.error("Error fetching teams:", err);
-      setError("Failed to load teams. Please try again.");
+      console.error(`Error fetching ${currentSport} teams:`, err);
+      setError(`Failed to load ${currentSport} teams. Please try again.`);
     } finally {
       setTeamsLoading(false);
     }
-  }, [getSmartMockTeams]);
+  }, [currentSport, getFirebaseTeams]);
 
   // Initial load
   useEffect(() => {
     fetchTeams();
-  }, [fetchTeams]);
+  }, [fetchTeams, currentSport]);
 
   // Generate recommendations when data changes - FIXED DEPENDENCY
   useEffect(() => {
@@ -408,10 +354,13 @@ const TeamsPage = () => {
   return (
     <div className="teams-page">
       <div className="teams-header">
-        <h2>🏀 Tournament Teams</h2>
+        <h2>
+          {currentSport === 'basketball' ? '🏀' : '⚾'}
+          {currentSport === 'basketball' ? ' March Madness' : ' College World Series'} Teams
+        </h2>
         <div className="header-controls">
-          <button 
-            className="refresh-button" 
+          <button
+            className="refresh-button"
             onClick={handleRefresh}
             disabled={teamsLoading}
           >
@@ -428,7 +377,7 @@ const TeamsPage = () => {
       {/* Smart user welcome */}
       {user && (
         <div style={{ marginBottom: '20px', fontSize: '14px', color: '#666' }}>
-          Welcome back, {userProfile?.username || user.displayName || 'Fan'}! 
+          Welcome back, {userProfile?.username || user.displayName || 'Fan'}!
           {favoriteTeams.length > 0 && (
             <span> Following {favoriteTeams.length} team{favoriteTeams.length !== 1 ? 's' : ''}: {favoriteTeams.join(', ')}</span>
           )}
@@ -494,7 +443,7 @@ const TeamsPage = () => {
             }}
           />
         </div>
-        
+
         <div>
           <label style={{ display: 'block', marginBottom: '5px', fontWeight: '500' }}>🏆 Conference</label>
           <select
@@ -514,7 +463,7 @@ const TeamsPage = () => {
             ))}
           </select>
         </div>
-        
+
         <div>
           <label style={{ display: 'block', marginBottom: '5px', fontWeight: '500' }}>📊 Sort By</label>
           <select
@@ -548,7 +497,7 @@ const TeamsPage = () => {
           ) : (
             <>
               <div className="teams-count">
-                {filteredTeams.length} Team{filteredTeams.length !== 1 ? 's' : ''} 
+                {filteredTeams.length} Team{filteredTeams.length !== 1 ? 's' : ''}
                 {searchQuery && ` • Filtered by "${searchQuery}"`}
                 {conferenceFilter !== "all" && ` • ${conferenceFilter} only`}
               </div>
@@ -567,13 +516,13 @@ const TeamsPage = () => {
                             <span style={{ color: '#e63946', fontSize: '14px' }}>❤️</span>
                           )}
                           {team.ranking <= 5 && (
-                            <span style={{ 
-                              background: '#FFD700', 
-                              color: '#000', 
-                              padding: '2px 6px', 
-                              borderRadius: '4px', 
-                              fontSize: '11px', 
-                              fontWeight: 'bold' 
+                            <span style={{
+                              background: '#FFD700',
+                              color: '#000',
+                              padding: '2px 6px',
+                              borderRadius: '4px',
+                              fontSize: '11px',
+                              fontWeight: 'bold'
                             }}>
                               #{team.ranking}
                             </span>
@@ -584,7 +533,7 @@ const TeamsPage = () => {
                           Seed: {team.seed} • {team.wins}-{team.losses} ({Math.round(team.winPct * 100)}%)
                         </div>
                       </div>
-                      
+
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
@@ -604,12 +553,12 @@ const TeamsPage = () => {
                         {favoriteTeams.includes(team.shortName) ? '❤️ Following' : '+ Follow'}
                       </button>
                     </div>
-                    
+
                     {/* Smart team insights */}
                     {teamInsights[team.id] && (
-                      <div style={{ 
-                        marginTop: '8px', 
-                        fontSize: '11px', 
+                      <div style={{
+                        marginTop: '8px',
+                        fontSize: '11px',
                         color: '#666',
                         display: 'flex',
                         gap: '10px',
@@ -665,7 +614,7 @@ const TeamsPage = () => {
                   {favoriteTeams.includes(selectedTeam.shortName) ? '❤️ Following' : '+ Follow'}
                 </button>
               </div>
-              
+
               {/* Smart team insights bar */}
               {teamInsights[selectedTeam.id] && (
                 <div style={{
@@ -767,9 +716,9 @@ const TeamsPage = () => {
                         )}
                       </div>
                       <div className="player-position">{player.position} • {player.year}</div>
-                      <div style={{ 
-                        fontSize: '12px', 
-                        color: '#666', 
+                      <div style={{
+                        fontSize: '12px',
+                        color: '#666',
                         marginTop: '4px',
                         display: 'flex',
                         gap: '8px'
@@ -820,10 +769,10 @@ const TeamsPage = () => {
             )}
 
             {/* Smart Action Buttons */}
-            <div style={{ 
-              marginTop: '20px', 
-              padding: '15px', 
-              background: 'rgba(248, 249, 250, 0.7)', 
+            <div style={{
+              marginTop: '20px',
+              padding: '15px',
+              background: 'rgba(248, 249, 250, 0.7)',
               borderRadius: '8px',
               display: 'flex',
               gap: '10px',
@@ -844,7 +793,7 @@ const TeamsPage = () => {
               >
                 {favoriteTeams.includes(selectedTeam.shortName) ? '💔 Unfollow' : '❤️ Follow Team'}
               </button>
-              
+
               {selectedTeam.conference && (
                 <button
                   onClick={() => setConferenceFilter(selectedTeam.conference)}
@@ -861,7 +810,7 @@ const TeamsPage = () => {
                   🏆 View {selectedTeam.conference} Teams
                 </button>
               )}
-              
+
               <button
                 onClick={() => setSortBy('ranking')}
                 style={{
@@ -926,12 +875,12 @@ const TeamsPage = () => {
         color: '#666',
         textAlign: 'center'
       }}>
-        <strong>🏀 March Madness 2025:</strong> Following {favoriteTeams.length} teams • 
-        Viewing {filteredTeams.length} of {teams.length} total teams • 
+        <strong>🏀 March Madness 2025:</strong> Following {favoriteTeams.length} teams •
+        Viewing {filteredTeams.length} of {teams.length} total teams •
         {conferences.length} conferences represented
         {user && (
           <div style={{ marginTop: '5px' }}>
-            Signed in as {userProfile?.username || user.displayName || 'Fan'} • 
+            Signed in as {userProfile?.username || user.displayName || 'Fan'} •
             Personalized recommendations enabled ✨
           </div>
         )}

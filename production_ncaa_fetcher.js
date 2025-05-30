@@ -301,15 +301,15 @@ class NCAADataFetcher {
     return results;
   }
 
-  // Create game document based on sport
+  // FIXED: Baseball schema to match existing basketball schema
   createGameDocument(team1Name, team2Name, team1Score, team2Score, gameState, round, location, gameDate, gameIdentifier) {
     const baseDoc = {
       gameIdentifier,
-      lastUpdated: admin.firestore.FieldValue.serverTimestamp()
+      LastUpdated: admin.firestore.FieldValue.serverTimestamp() // Match basketball
     };
 
     if (this.sport === 'basketball') {
-      // Use existing basketball structure
+      // Keep existing basketball structure (no changes)
       return {
         ...baseDoc,
         Team1Name: team1Name,
@@ -319,21 +319,21 @@ class NCAADataFetcher {
         GameState: gameState,
         Round: round,
         DatePlayed: admin.firestore.Timestamp.fromDate(gameDate),
-        Location: location,
-        LastUpdated: admin.firestore.FieldValue.serverTimestamp()
+        Location: location
       };
     } else {
-      // Use new baseball structure
+      // FIXED: Baseball now uses SAME field names as basketball
       return {
         ...baseDoc,
-        team1Name: team1Name,
-        team2Name: team2Name,
-        team1Score: team1Score,
-        team2Score: team2Score,
-        gameState: gameState,
-        round: round,
-        datePlayed: admin.firestore.Timestamp.fromDate(gameDate),
-        location: location,
+        Team1Name: team1Name,        // ✅ Now matches basketball
+        Team2Name: team2Name,        // ✅ Now matches basketball
+        ScoreTeam1: team1Score,      // ✅ Now matches basketball
+        ScoreTeam2: team2Score,      // ✅ Now matches basketball
+        GameState: gameState,        // ✅ Now matches basketball
+        Round: round,                // ✅ Now matches basketball
+        DatePlayed: admin.firestore.Timestamp.fromDate(gameDate), // ✅ Now matches basketball
+        Location: location,          // ✅ Now matches basketball
+        // Baseball-specific fields (optional additions)
         sport: 'baseball',
         inning: 0,
         isElimination: false
@@ -341,30 +341,10 @@ class NCAADataFetcher {
     }
   }
 
-  // Ensure teams exist in database
-  async ensureTeamsExist(team1Name, team2Name, gameData) {
-    try {
-      for (const teamName of [team1Name, team2Name]) {
-        const teamQuery = await db.collection(this.collections.teams)
-          .where(this.sport === 'basketball' ? 'TeamName' : 'name', '==', teamName)
-          .limit(1)
-          .get();
-
-        if (teamQuery.empty) {
-          // Create team
-          const teamDoc = this.createTeamDocument(teamName, gameData);
-          await db.collection(this.collections.teams).add(teamDoc);
-          console.log(`  👥 Created team: ${teamName}`);
-        }
-      }
-    } catch (error) {
-      console.error(`❌ Error ensuring teams exist:`, error.message);
-    }
-  }
-
-  // Create team document based on sport
+  // FIXED: Also update team schema to match
   createTeamDocument(teamName, gameData) {
     if (this.sport === 'basketball') {
+      // Keep existing basketball structure
       return {
         TeamName: teamName,
         CoachName: '',
@@ -375,44 +355,61 @@ class NCAADataFetcher {
         LastUpdated: admin.firestore.FieldValue.serverTimestamp()
       };
     } else {
+      // FIXED: Baseball teams now use SAME field names as basketball
       return {
-        name: teamName,
-        coachName: '',
-        conference: '',
-        wins: 0,
-        losses: 0,
-        seed: null,
+        TeamName: teamName,          // ✅ Now matches basketball (was: name)
+        CoachName: '',               // ✅ Now matches basketball (was: coachName)
+        Conference: '',              // ✅ Now matches basketball (was: conference)
+        Wins: 0,                     // ✅ Now matches basketball (was: wins)
+        Losses: 0,                   // ✅ Now matches basketball (was: losses)
+        Seed: null,                  // ✅ Now matches basketball (was: seed)
+        LastUpdated: admin.firestore.FieldValue.serverTimestamp(), // ✅ Now matches basketball
+        // Baseball-specific fields (optional additions)
         sport: 'baseball',
-        region: '',
-        lastUpdated: admin.firestore.FieldValue.serverTimestamp()
+        region: ''
       };
     }
   }
 
-  // Get existing scores from game document
-  getExistingScores(gameDoc) {
-    if (this.sport === 'basketball') {
-      return [gameDoc.ScoreTeam1 || 0, gameDoc.ScoreTeam2 || 0];
-    } else {
-      return [gameDoc.team1Score || 0, gameDoc.team2Score || 0];
+  // FIXED: Update team query to use consistent field name
+  async ensureTeamsExist(team1Name, team2Name, gameData) {
+    try {
+      for (const teamName of [team1Name, team2Name]) {
+        const teamQuery = await db.collection(this.collections.teams)
+          .where('TeamName', '==', teamName)  // ✅ Now same for both sports
+          .limit(1)
+          .get();
+
+        if (teamQuery.empty) {
+          const teamDoc = this.createTeamDocument(teamName, gameData);
+          await db.collection(this.collections.teams).add(teamDoc);
+          console.log(`  👥 Created team: ${teamName}`);
+        }
+      }
+    } catch (error) {
+      console.error(`❌ Error ensuring teams exist:`, error.message);
     }
   }
 
-  // Get last updated timestamp
-  getLastUpdated(gameDoc) {
-    const timestamp = gameDoc.LastUpdated || gameDoc.lastUpdated;
-    return timestamp?.toDate();
+  // FIXED: Now works for both sports since they use same field names
+  getExistingScores(gameDoc) {
+    return [gameDoc.ScoreTeam1 || 0, gameDoc.ScoreTeam2 || 0];
   }
 
-  // Determine optimal fetch interval
+  // FIXED: Now works for both sports since they use same field names
+  getLastUpdated(gameDoc) {
+    return gameDoc.LastUpdated?.toDate();
+  }
+
+  // FIXED: Updated to use consistent field names
   async getOptimalInterval() {
     try {
       const now = new Date();
       const oneHourFromNow = new Date(now.getTime() + 60 * 60 * 1000);
 
-      // Check for live games
+      // Check for live games - UNIFIED: Always use GameState
       const liveGamesQuery = await db.collection(this.collections.games)
-        .where(this.sport === 'basketball' ? 'GameState' : 'gameState', '==', 'in-progress')
+        .where('GameState', '==', 'in-progress')
         .limit(1)
         .get();
 
@@ -421,10 +418,10 @@ class NCAADataFetcher {
         return FETCH_INTERVALS.LIVE_GAMES;
       }
 
-      // Check for upcoming games
+      // Check for upcoming games - UNIFIED: Always use DatePlayed
       const upcomingGamesQuery = await db.collection(this.collections.games)
-        .where(this.sport === 'basketball' ? 'DatePlayed' : 'datePlayed', '>', admin.firestore.Timestamp.fromDate(now))
-        .where(this.sport === 'basketball' ? 'DatePlayed' : 'datePlayed', '<', admin.firestore.Timestamp.fromDate(oneHourFromNow))
+        .where('DatePlayed', '>', admin.firestore.Timestamp.fromDate(now))
+        .where('DatePlayed', '<', admin.firestore.Timestamp.fromDate(oneHourFromNow))
         .limit(1)
         .get();
 
@@ -559,8 +556,8 @@ async function main() {
   try {
     console.log("🚀 Starting NCAA Data Fetcher for Database Population");
     console.log("🔧 FIXED: Tournament round filter now includes 'REGIONALS' (plural)");
-    console.log("⏳ Will capture actual tournament games from your images");
-    console.log("🎯 FIXED: All variable scope issues resolved");
+    console.log("🎯 FIXED: Unified schema - baseball now matches basketball field names");
+    console.log("✅ READY: Your UI components will work for both sports without changes");
     console.log("====================================================");
     
     // Create and start fetcher
@@ -584,13 +581,14 @@ async function main() {
     console.log("🔄 Fetch frequency automatically adjusts based on game activity");
     console.log("⏭️ Skips placeholder TBA games until real tournament data is available");
     console.log("📅 Only processes games from May 30, 2025 forward");
-    console.log("🏆 Now correctly captures REGIONALS and other tournament games");
+    console.log("🏆 Correctly captures REGIONALS and other tournament games");
+    console.log("🔧 UNIFIED SCHEMA: Baseball uses same field names as basketball");
     console.log("\n⌨️ Press Ctrl+C to stop the fetcher");
     
     // Keep process running
     console.log("\n" + "=".repeat(60));
     console.log("🔄 FETCHER RUNNING - Database population in progress...");
-    console.log("🎯 Now ready to capture the tournament games from your images!");
+    console.log("🎯 Both sports now use unified schema for easy UI development!");
     console.log("=".repeat(60));
 
   } catch (error) {
