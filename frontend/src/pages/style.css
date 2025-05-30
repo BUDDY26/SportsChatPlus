@@ -1496,103 +1496,47 @@ body {
     font-size: 10px;
   }
 }
-/* ===================================== */
-/* EXACT LOGIN TO DASHBOARD MATCH */
-/* ===================================== */
+/* MATCH AZURE VERSION - ONLY THESE 2 CHANGES */
 
-/* Ensure all pages use identical background setup */
-.home-page, .login-page, .sign-up, .dashboard-page {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-image: url('./Logo.png');
-  background-size: 800px 600px !important; /* Same fixed size */
-  background-position: center !important;
-  background-repeat: no-repeat !important;
-  background-color: var(--bg-primary) !important; /* Force same background color */
-  padding: 20px;
-  transition: background-color 0.3s ease;
-}
-
-/* Dashboard specific layout adjustment */
-.dashboard-page {
-  justify-content: flex-start !important; /* Dashboard starts from top */
-}
-
-/* Make dashboard containers match login content-box styling exactly */
-.dashboard-header {
-  background-color: var(--bg-secondary) !important; /* Same as login content-box */
-  border-radius: 8px;
-  box-shadow: var(--shadow-light);
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
-  backdrop-filter: blur(10px) !important; /* Same blur as login */
-  border: 1px solid rgba(255, 255, 255, 0.2) !important; /* Same border as login */
-}
-
+/* 1. Make main container more opaque like Azure */
 .march-madness-container {
-  background-color: var(--bg-secondary) !important; /* Same as login content-box */
-  border-radius: 8px;
-  box-shadow: var(--shadow-light);
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
-  backdrop-filter: blur(10px) !important; /* Same blur as login */
-  border: 1px solid rgba(255, 255, 255, 0.2) !important; /* Same border as login */
+  background-color: rgba(255, 255, 255, 0.85) !important;
 }
 
-.ai-insights-container {
-  background-color: var(--bg-secondary) !important; /* Same as login content-box */
-  backdrop-filter: blur(10px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
-  border-radius: 8px;
-  box-shadow: var(--shadow-light);
-}
-
-.recommendations-container {
-  background-color: var(--bg-secondary) !important; /* Same as login content-box */
-  backdrop-filter: blur(10px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
-  border-radius: 8px;
-  box-shadow: var(--shadow-light);
-}
-
-.dashboard-footer {
-  background-color: var(--bg-secondary) !important; /* Same as login content-box */
-  backdrop-filter: blur(10px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
-  border-radius: 8px;
-  box-shadow: var(--shadow-light);
-}
-
-/* Make sure all cards use same styling as login */
+/* 2. Make AI cards readable like Azure */
 .ai-insight-card,
 .recommendation-card {
-  background-color: var(--bg-secondary) !important;
-  backdrop-filter: blur(10px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
-  box-shadow: var(--shadow-light);
+  background-color: rgba(255, 255, 255, 0.95) !important;
+}
+/* MAKE AI BOXES SMALLER AND MORE COMPACT */
+.ai-insights-container,
+.recommendations-container {
+  padding: 8px !important; /* Reduce from 15px to 8px */
+  margin: 0 auto 6px !important; /* Reduce margins */
+  max-width: 900px !important; /* Smaller max width */
 }
 
-/* Dark theme - match login page exactly */
-[data-theme="dark"] .dashboard-header,
-[data-theme="dark"] .march-madness-container,
-[data-theme="dark"] .ai-insights-container,
-[data-theme="dark"] .recommendations-container,
-[data-theme="dark"] .dashboard-footer,
-[data-theme="dark"] .ai-insight-card,
-[data-theme="dark"] .recommendation-card {
-  background-color: var(--bg-secondary) !important; /* Uses dark theme --bg-secondary */
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+.ai-insights-grid,
+.recommendations-grid {
+  gap: 6px !important; /* Reduce gap between cards */
+  margin-top: 6px !important; /* Less top margin */
 }
 
-/* Responsive - same as other pages */
-@media (max-width: 1200px) {
-  .home-page, .login-page, .sign-up, .dashboard-page {
-    background-size: 70% !important;
-  }
+.ai-insight-card,
+.recommendation-card {
+  padding: 6px !important; /* Smaller card padding */
+  font-size: 11px !important; /* Smaller text */
 }
 
-@media (max-width: 768px) {
-  .home-page, .login-page, .sign-up, .dashboard-page {
-    background-size: 90% !important;
-  }
+.insight-header strong,
+.recommendation-card strong {
+  font-size: 12px !important; /* Smaller headers */
+}
+
+.insight-description {
+  font-size: 10px !important; /* Smaller description text */
+}
+
+.insight-reasoning {
+  font-size: 9px !important; /* Smaller reasoning text */
 }
