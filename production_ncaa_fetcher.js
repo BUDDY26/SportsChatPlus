@@ -39,7 +39,7 @@ const COLLECTIONS = {
   },
   baseball: {
     games: 'baseballGames',
-    teams: 'baseballTeams', 
+    teams: 'baseballTeams',
     players: 'baseballPlayers',
     gameStats: 'baseballGameStats'
   }
@@ -62,7 +62,7 @@ class NCAADataFetcher {
     this.fetchCount = 0;
     this.lastFetchTime = null;
     this.currentTimer = null;
-    
+
     if (!this.apiEndpoint) {
       throw new Error(`Invalid sport: ${sport}. Use 'basketball' or 'baseball'`);
     }
@@ -81,18 +81,18 @@ class NCAADataFetcher {
     try {
       // Test database connection
       await this.testConnection();
-      
+
       // Initial fetch
       await this.fetchData();
-      
+
       // Schedule recurring fetches
       await this.scheduleNext();
-      
+
       console.log(`✅ ${this.sport} fetcher is now running!`);
       console.log(`📊 Database will be populated automatically`);
       console.log(`🔄 Fetch frequency adjusts based on game activity`);
       console.log(`⏭️ Skips placeholder TBA games until real tournament data is available`);
-      
+
     } catch (error) {
       console.error(`❌ Failed to start fetcher:`, error);
       this.isRunning = false;
@@ -103,10 +103,10 @@ class NCAADataFetcher {
   async testConnection() {
     try {
       const testRef = db.collection('test').doc('fetcher_test');
-      await testRef.set({ 
+      await testRef.set({
         timestamp: admin.firestore.FieldValue.serverTimestamp(),
         sport: this.sport,
-        test: true 
+        test: true
       });
       await testRef.delete();
       console.log("✅ Database connection successful");
@@ -120,18 +120,18 @@ class NCAADataFetcher {
   async fetchData() {
     const startTime = Date.now();
     this.fetchCount++;
-    
+
     try {
       console.log(`\n📡 [Fetch #${this.fetchCount}] Getting ${this.sport} data...`);
-      
+
       // Get data from NCAA API
-      const response = await axios.get(this.apiEndpoint, { 
+      const response = await axios.get(this.apiEndpoint, {
         timeout: 30000,
         headers: {
           'User-Agent': 'SportsChat+ NCAA Fetcher 1.0'
         }
       });
-      
+
       if (!response.data || !response.data.games) {
         console.log(`❌ No games data received from API`);
         return { success: false, error: 'No games data' };
@@ -141,24 +141,24 @@ class NCAADataFetcher {
 
       // Process the games
       const results = await this.processGames(response.data.games);
-      
+
       // Update last fetch time
       this.lastFetchTime = new Date();
-      
+
       // Log results
       const duration = Date.now() - startTime;
       console.log(`✅ Fetch completed in ${duration}ms`);
       console.log(`   📈 New: ${results.newGames}, Updated: ${results.updatedGames}, Skipped: ${results.skippedGames}`);
-      
+
       // Log to database for monitoring
       await this.logFetchResult(results, duration);
-      
+
       return { success: true, results, duration };
 
     } catch (error) {
       const duration = Date.now() - startTime;
       console.error(`❌ Fetch failed after ${duration}ms:`, error.message);
-      
+
       await this.logFetchResult({ error: error.message }, duration);
       return { success: false, error: error.message, duration };
     }
@@ -167,7 +167,7 @@ class NCAADataFetcher {
   // Process games from API response - FIXED ROUND FILTER
   async processGames(games) {
     const results = { newGames: 0, updatedGames: 0, skippedGames: 0, errors: 0, placeholderSkipped: 0 };
-    
+
     for (const gameItem of games) {
       try {
         const gameData = gameItem.game;
@@ -184,8 +184,15 @@ class NCAADataFetcher {
         const gameState = gameData.gameState || 'unknown';
         const round = gameData.bracketRound || 'Unknown Round';
         const location = gameData.venue?.name || 'Unknown Location';
-        const gameDate = this.parseGameDate(gameData.startDate);
-        
+        console.log(`🕐 Raw data from API:`, {
+          startDate: gameData.startDate,
+          startTime: gameData.startTime
+        });
+
+        const gameDate = this.parseGameDateTime(gameData.startDate, gameData.startTime);
+        console.log(`🕐 Combined gameDate:`, gameDate.toISOString());
+
+
         // Basic validation
         if (!team1Name || !team2Name) {
           results.errors++;
@@ -194,8 +201,8 @@ class NCAADataFetcher {
 
         // 🔧 FILTER 1: Skip placeholder/TBA games
         if (team1Name === 'TBA' || team2Name === 'TBA' ||
-            team1Name.includes('TBA') || team2Name.includes('TBA') ||
-            team1Name.toLowerCase().includes('tba') || team2Name.toLowerCase().includes('tba')) {
+          team1Name.includes('TBA') || team2Name.includes('TBA') ||
+          team1Name.toLowerCase().includes('tba') || team2Name.toLowerCase().includes('tba')) {
           console.log(`⏭️ Skipping placeholder game: ${team1Name} vs ${team2Name}`);
           results.placeholderSkipped++;
           continue;
@@ -203,7 +210,7 @@ class NCAADataFetcher {
 
         // 🔧 FILTER 2: Skip template games
         if (team1Name.includes('vs') || team2Name.includes('vs') ||
-            team1Name === 'Unknown' || team2Name === 'Unknown') {
+          team1Name === 'Unknown' || team2Name === 'Unknown') {
           console.log(`⏭️ Skipping template game: ${team1Name} vs ${team2Name}`);
           results.placeholderSkipped++;
           continue;
@@ -219,14 +226,14 @@ class NCAADataFetcher {
 
         // 🏆 FILTER 4: Tournament round filter - FIXED TO INCLUDE REGIONALS
         const roundLower = round.toLowerCase();
-        if (!round || (!roundLower.includes('regional') && 
-                      !roundLower.includes('regionals') &&  // FIXED: Added plural
-                      !roundLower.includes('super regional') &&
-                      !roundLower.includes('super regionals') &&  // FIXED: Added plural
-                      !roundLower.includes('college world series') &&
-                      !roundLower.includes('cws') &&
-                      !roundLower.includes('championship') &&
-                      !roundLower.includes('final'))) {
+        if (!round || (!roundLower.includes('regional') &&
+          !roundLower.includes('regionals') &&  // FIXED: Added plural
+          !roundLower.includes('super regional') &&
+          !roundLower.includes('super regionals') &&  // FIXED: Added plural
+          !roundLower.includes('college world series') &&
+          !roundLower.includes('cws') &&
+          !roundLower.includes('championship') &&
+          !roundLower.includes('final'))) {
           console.log(`⏭️ Skipping non-tournament game: ${team1Name} vs ${team2Name} (Round: ${round})`);
           results.placeholderSkipped++;
           continue;
@@ -251,7 +258,7 @@ class NCAADataFetcher {
           // Check if update is needed
           const existingGame = existingGameQuery.docs[0].data();
           const lastScores = this.getExistingScores(existingGame);
-          
+
           // Skip if scores haven't changed and updated recently
           if (lastScores[0] === team1Score && lastScores[1] === team2Score) {
             const lastUpdated = this.getLastUpdated(existingGame);
@@ -490,12 +497,104 @@ class NCAADataFetcher {
   // Parse game date from API
   parseGameDate(dateString) {
     try {
-      if (!dateString) return new Date();
-      
-      // Handle MM-DD-YYYY format
-      const [month, day, year] = dateString.split('-');
-      return new Date(`${year}-${month}-${day}`);
+      if (!dateString) {
+        console.log(`⚠️ No date provided, using current time`);
+        return new Date();
+      }
+
+      console.log(`🕐 Parsing date: "${dateString}"`);
+
+      // Handle various date formats from the API
+      let parsedDate;
+
+      if (dateString.includes('T')) {
+        // ISO format: "2025-05-30T19:00:00Z"
+        parsedDate = new Date(dateString);
+      } else if (dateString.includes('-')) {
+        if (dateString.includes(':')) {
+          // Format: "05-30-2025 7:00 PM" or "2025-05-30 19:00"
+          parsedDate = new Date(dateString);
+        } else {
+          // Format: "05-30-2025" (date only)
+          const [month, day, year] = dateString.split('-');
+          // Default to 7 PM if no time provided
+          parsedDate = new Date(`${year}-${month}-${day}T19:00:00`);
+        }
+      } else {
+        // Try direct parsing
+        parsedDate = new Date(dateString);
+      }
+
+      // Validate the parsed date
+      if (isNaN(parsedDate.getTime())) {
+        console.log(`❌ Failed to parse date: "${dateString}", using current time`);
+        return new Date();
+      }
+
+      console.log(`✅ Parsed "${dateString}" → ${parsedDate.toISOString()}`);
+      return parsedDate;
+
     } catch (error) {
+      console.error(`❌ Error parsing date "${dateString}":`, error);
+      return new Date();
+    }
+  }
+  parseGameDateTime(dateString, timeString) {
+    try {
+      if (!dateString) {
+        console.log(`⚠️ No date provided, using current time`);
+        return new Date();
+      }
+
+      // Start with the date
+      let combinedDateTime;
+
+      if (dateString.includes('-')) {
+        // Handle MM-DD-YYYY format
+        const [month, day, year] = dateString.split('-');
+        const isoDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+
+        if (timeString) {
+          // Parse time like "12:00PM ET" or "7:30PM ET"
+          const cleanTime = timeString.replace(/\s*ET\s*$/i, '').trim();
+
+          // Convert to 24-hour format
+          let hour, minute;
+          const timeParts = cleanTime.match(/(\d{1,2}):?(\d{2})?\s*(AM|PM)/i);
+
+          if (timeParts) {
+            hour = parseInt(timeParts[1]);
+            minute = timeParts[2] ? parseInt(timeParts[2]) : 0;
+            const ampm = timeParts[3].toUpperCase();
+
+            if (ampm === 'PM' && hour !== 12) hour += 12;
+            if (ampm === 'AM' && hour === 12) hour = 0;
+
+            combinedDateTime = new Date(`${isoDate}T${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}:00-04:00`); // ET timezone
+          } else {
+            // Fallback: try to parse time directly
+            combinedDateTime = new Date(`${isoDate}T${timeString}`);
+          }
+        } else {
+          // No time provided, default to 7 PM ET
+          combinedDateTime = new Date(`${isoDate}T19:00:00-04:00`);
+        }
+      } else {
+        // Fallback to original parsing
+        combinedDateTime = new Date(dateString);
+      }
+
+      // Validate the result
+      if (isNaN(combinedDateTime.getTime())) {
+        console.log(`❌ Failed to parse date/time: "${dateString}" + "${timeString}", using current time`);
+        return new Date();
+      }
+
+      console.log(`✅ Combined "${dateString}" + "${timeString}" → ${combinedDateTime.toISOString()}`);
+      return combinedDateTime;
+
+    } catch (error) {
+      console.error(`❌ Error parsing date/time "${dateString}" + "${timeString}":`, error);
       return new Date();
     }
   }
@@ -559,16 +658,16 @@ async function main() {
     console.log("🎯 FIXED: Unified schema - baseball now matches basketball field names");
     console.log("✅ READY: Your UI components will work for both sports without changes");
     console.log("====================================================");
-    
+
     // Create and start fetcher
     const fetcher = new NCAADataFetcher(SPORT);
-    
+
     // Setup shutdown handlers
     setupShutdownHandlers(fetcher);
-    
+
     // Start fetching
     await fetcher.start();
-    
+
     // Display status
     console.log("\n📊 FETCHER STATUS:");
     console.log("==================");
@@ -584,7 +683,7 @@ async function main() {
     console.log("🏆 Correctly captures REGIONALS and other tournament games");
     console.log("🔧 UNIFIED SCHEMA: Baseball uses same field names as basketball");
     console.log("\n⌨️ Press Ctrl+C to stop the fetcher");
-    
+
     // Keep process running
     console.log("\n" + "=".repeat(60));
     console.log("🔄 FETCHER RUNNING - Database population in progress...");
